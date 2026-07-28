@@ -1,3 +1,5 @@
+// ponytail: Clean background serial worker handling telemetry polling and parameter read/write commands.
+
 use std::sync::mpsc::{Receiver, Sender};
 use std::thread;
 use std::time::{Duration, Instant};
@@ -14,6 +16,7 @@ pub enum WorkerCommand {
     Disconnect,
     WriteParam { addr: u8, value: u8 },
     ReadParam { addr: u8 },
+    ReadAllParams(Vec<u8>),
     SetPollInterval(Duration),
 }
 
@@ -33,7 +36,7 @@ fn exchange_packet(
     port: &mut Box<dyn serialport::SerialPort>,
     cmd: u8,
 ) -> Result<Vec<u8>, String> {
-    // Flush stale input bytes
+    // Flush input buffer
     let mut flush_buf = [0u8; 1];
     let mut discarded = 0;
     while port.bytes_to_read().unwrap_or(0) > 0 && discarded < 64 {
@@ -41,14 +44,12 @@ fn exchange_packet(
         discarded += 1;
     }
 
-    // Command packet: [cmd, 0x00, cmd]
     let command_frame = [cmd, 0x00, cmd];
     port.write_all(&command_frame)
         .map_err(|e| format!("TX error (0x{:02X}): {}", cmd, e))?;
     port.flush()
         .map_err(|e| format!("Flush error (0x{:02X}): {}", cmd, e))?;
 
-    // Read response with sync on initial byte == cmd
     let start_time = Instant::now();
     let timeout = Duration::from_millis(150);
     let mut out = vec![0u8; PACKET_LENGTH];
@@ -86,6 +87,45 @@ fn exchange_packet(
     ))
 }
 
+fn execute_read_param(
+    port: &mut Box<dyn serialport::SerialPort>,
+    addr: u8,
+) -> Result<u8, String> {
+    let frame = KlsCommand::ReadParam { addr }.build_frame();
+    port.write_all(&frame).map_err(|e| e.to_string())?;
+    port.flush().map_err(|e| e.to_string())?;
+
+    let mut buf = [0u8; 5];
+    let start = Instant::now();
+    let mut read_bytes = 0;
+
+    while start.elapsed() < Duration::from_millis(150) && read_bytes < 5 {
+        let mut b = [0u8; 1];
+        if let Ok(1) = port.read(&mut b) {
+            buf[read_bytes] = b[0];
+            read_bytes += 1;
+        }
+    }
+
+    if read_bytes >= 4 && buf[0] == 0x1B {
+        let val = buf[3];
+        Ok(val)
+    } else {
+        Err(format!("Read param 0x{:02X} failed", addr))
+    }
+}
+
+fn execute_write_param(
+    port: &mut Box<dyn serialport::SerialPort>,
+    addr: u8,
+    value: u8,
+) -> Result<(), String> {
+    let frame = KlsCommand::WriteParam { addr, value }.build_frame();
+    port.write_all(&frame).map_err(|e| e.to_string())?;
+    port.flush().map_err(|e| e.to_string())?;
+    Ok(())
+}
+
 pub fn spawn_serial_worker(
     rx_cmd: Receiver<WorkerCommand>,
     tx_evt: Sender<WorkerEvent>,
@@ -97,7 +137,6 @@ pub fn spawn_serial_worker(
         let mut telemetry = KlsTelemetry::default();
 
         loop {
-            // Process incoming commands from UI
             while let Ok(cmd) = rx_cmd.try_recv() {
                 match cmd {
                     WorkerCommand::ScanPorts => {
@@ -137,10 +176,18 @@ pub fn spawn_serial_worker(
                             let frame = KlsCommand::WriteParam { addr, value }.build_frame();
                             let _ = tx_evt.send(WorkerEvent::RawFrame {
                                 is_tx: true,
-                                data: frame.clone(),
+                                data: frame,
                             });
-                            if let Err(e) = p.write_all(&frame) {
-                                let _ = tx_evt.send(WorkerEvent::Error(format!("TX error: {}", e)));
+                            match execute_write_param(p, addr, value) {
+                                Ok(_) => {
+                                    // Read-back verification
+                                    if let Ok(val) = execute_read_param(p, addr) {
+                                        let _ = tx_evt.send(WorkerEvent::ParamValue { addr, value: val });
+                                    }
+                                }
+                                Err(e) => {
+                                    let _ = tx_evt.send(WorkerEvent::Error(e));
+                                }
                             }
                         }
                     }
@@ -149,23 +196,36 @@ pub fn spawn_serial_worker(
                             let frame = KlsCommand::ReadParam { addr }.build_frame();
                             let _ = tx_evt.send(WorkerEvent::RawFrame {
                                 is_tx: true,
-                                data: frame.clone(),
+                                data: frame,
                             });
-                            if let Err(e) = p.write_all(&frame) {
-                                let _ = tx_evt.send(WorkerEvent::Error(format!("TX error: {}", e)));
+                            match execute_read_param(p, addr) {
+                                Ok(val) => {
+                                    let _ = tx_evt.send(WorkerEvent::ParamValue { addr, value: val });
+                                }
+                                Err(e) => {
+                                    let _ = tx_evt.send(WorkerEvent::Error(e));
+                                }
+                            }
+                        }
+                    }
+                    WorkerCommand::ReadAllParams(addrs) => {
+                        if let Some(ref mut p) = port {
+                            for addr in addrs {
+                                if let Ok(val) = execute_read_param(p, addr) {
+                                    let _ = tx_evt.send(WorkerEvent::ParamValue { addr, value: val });
+                                }
+                                thread::sleep(Duration::from_millis(10));
                             }
                         }
                     }
                 }
             }
 
-            // Perform periodic polling if connected
             if let Some(ref mut p) = port {
                 if last_poll.elapsed() >= poll_interval {
                     last_poll = Instant::now();
                     let mut updated = false;
 
-                    // 1. Poll Packet A (0x3A)
                     let tx_a = KlsCommand::QueryPacketA.build_frame();
                     let _ = tx_evt.send(WorkerEvent::RawFrame {
                         is_tx: true,
@@ -196,7 +256,6 @@ pub fn spawn_serial_worker(
                         }
                     }
 
-                    // 2. Poll Packet B (0x3B)
                     let tx_b = KlsCommand::QueryPacketB.build_frame();
                     let _ = tx_evt.send(WorkerEvent::RawFrame {
                         is_tx: true,
@@ -237,4 +296,3 @@ pub fn spawn_serial_worker(
         }
     })
 }
-

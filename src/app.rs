@@ -1,12 +1,16 @@
-// ponytail: Clean single-file UI state management, no unnecessary UI abstractions.
+// ponytail: Full OEM Kelly KLS parameter interface with sub-tabs, safety modal, read-only grey fields, and JSON export/import.
 
 use eframe::egui;
 use egui_plot::{Line, Plot, PlotPoints};
-use std::collections::VecDeque;
+use std::collections::{BTreeMap, VecDeque};
 use std::sync::mpsc::{channel, Receiver, Sender};
 use std::time::Instant;
 
 use crate::protocol::kls::KlsTelemetry;
+use crate::protocol::oem_params::{
+    export_profile_to_json, get_all_param_defs, import_profile_from_json, OemCategory,
+    ParamProfile,
+};
 use crate::worker::serial::{spawn_serial_worker, WorkerCommand, WorkerEvent};
 
 #[derive(Debug, PartialEq)]
@@ -18,11 +22,9 @@ enum AppTab {
 }
 
 pub struct KlsApp {
-    // Worker channels
     tx_cmd: Sender<WorkerCommand>,
     rx_evt: Receiver<WorkerEvent>,
 
-    // Connection state
     available_ports: Vec<String>,
     selected_port: String,
     baud_rate: u32,
@@ -30,25 +32,22 @@ pub struct KlsApp {
     connected_port_name: String,
     status_msg: String,
 
-    // Telemetry state
     telemetry: KlsTelemetry,
 
-    // Time-series history for plots (timestamp_sec, value)
     start_time: Instant,
     voltage_history: VecDeque<[f64; 2]>,
     current_history: VecDeque<[f64; 2]>,
     rpm_history: VecDeque<[f64; 2]>,
     max_history_sec: f64,
 
-    // Parameter read/write state
-    param_addr: u8,
-    param_val: u8,
-    param_log: Vec<String>,
+    // Parameter State
+    oem_subtab: OemCategory,
+    param_values: BTreeMap<u8, u16>,
+    text_values: BTreeMap<u8, String>,
+    pending_write: Option<(u8, u16, &'static str)>, // (addr, val, label)
+    show_confirm_modal: bool,
 
-    // Diagnostic logs
     raw_logs: VecDeque<String>,
-
-    // Selected UI Tab
     current_tab: AppTab,
 }
 
@@ -57,11 +56,13 @@ impl KlsApp {
         let (tx_cmd, rx_worker_cmd) = channel();
         let (tx_worker_evt, rx_evt) = channel();
 
-        // Spawn background worker thread
         spawn_serial_worker(rx_worker_cmd, tx_worker_evt);
-
-        // Initial scan for ports
         let _ = tx_cmd.send(WorkerCommand::ScanPorts);
+
+        let mut param_values = BTreeMap::new();
+        for def in get_all_param_defs() {
+            param_values.insert(def.addr, def.default_val);
+        }
 
         Self {
             tx_cmd,
@@ -78,9 +79,11 @@ impl KlsApp {
             current_history: VecDeque::with_capacity(1000),
             rpm_history: VecDeque::with_capacity(1000),
             max_history_sec: 60.0,
-            param_addr: 0x01,
-            param_val: 0x00,
-            param_log: Vec::new(),
+            oem_subtab: OemCategory::Vehicle,
+            param_values,
+            text_values: BTreeMap::new(),
+            pending_write: None,
+            show_confirm_modal: false,
             raw_logs: VecDeque::with_capacity(500),
             current_tab: AppTab::Dashboard,
         }
@@ -97,69 +100,45 @@ impl KlsApp {
                 }
                 WorkerEvent::Connected(port_name) => {
                     self.is_connected = true;
-                    self.connected_port_name = port_name.clone();
-                    self.status_msg = format!("Connected to {}", port_name);
+                    self.connected_port_name = port_name;
+                    self.status_msg = "Connected".to_string();
                 }
                 WorkerEvent::Disconnected => {
                     self.is_connected = false;
-                    self.connected_port_name.clear();
                     self.status_msg = "Disconnected".to_string();
                 }
-                WorkerEvent::Telemetry(data) => {
+                WorkerEvent::Telemetry(t) => {
                     let elapsed = self.start_time.elapsed().as_secs_f64();
+                    self.voltage_history.push_back([elapsed, t.battery_voltage_v as f64]);
+                    self.current_history.push_back([elapsed, t.phase_current_a as f64]);
+                    self.rpm_history.push_back([elapsed, t.rpm as f64]);
 
-                    // Append to plot histories
-                    self.voltage_history
-                        .push_back([elapsed, data.battery_voltage_v as f64]);
-                    self.current_history
-                        .push_back([elapsed, data.phase_current_a as f64]);
-                    self.rpm_history.push_back([elapsed, data.rpm as f64]);
-
-                    // Trim old history beyond max_history_sec
-                    let cutoff = elapsed - self.max_history_sec;
-                    while self
-                        .voltage_history
-                        .front()
-                        .map_or(false, |p| p[0] < cutoff)
-                    {
+                    while self.voltage_history.front().map_or(false, |p| elapsed - p[0] > self.max_history_sec) {
                         self.voltage_history.pop_front();
-                    }
-                    while self
-                        .current_history
-                        .front()
-                        .map_or(false, |p| p[0] < cutoff)
-                    {
                         self.current_history.pop_front();
-                    }
-                    while self.rpm_history.front().map_or(false, |p| p[0] < cutoff) {
                         self.rpm_history.pop_front();
                     }
 
-                    self.telemetry = data;
+                    self.telemetry = t;
                     ctx.request_repaint();
                 }
                 WorkerEvent::ParamValue { addr, value } => {
-                    self.param_log
-                        .push(format!("Addr 0x{:02X} = 0x{:02X} ({})", addr, value, value));
+                    self.param_values.insert(addr, value as u16);
+                    let log = format!("✅ Read/Write Param [0x{:02X}] = {}", addr, value);
+                    self.raw_logs.push_back(log);
+                    ctx.request_repaint();
                 }
                 WorkerEvent::RawFrame { is_tx, data } => {
-                    let dir = if is_tx { "TX ->" } else { "RX <-" };
-                    let hex = data
-                        .iter()
-                        .map(|b| format!("{:02X}", b))
-                        .collect::<Vec<_>>()
-                        .join(" ");
-                    if self.raw_logs.len() >= 500 {
+                    let prefix = if is_tx { "TX ->" } else { "RX <-" };
+                    let hex_str = data.iter().map(|b| format!("{:02X}", b)).collect::<Vec<_>>().join(" ");
+                    self.raw_logs.push_back(format!("{} {}", prefix, hex_str));
+                    while self.raw_logs.len() > 500 {
                         self.raw_logs.pop_front();
                     }
-                    self.raw_logs.push_back(format!("{} {}", dir, hex));
                 }
                 WorkerEvent::Error(err) => {
                     self.status_msg = format!("Error: {}", err);
-                    if self.raw_logs.len() >= 500 {
-                        self.raw_logs.pop_front();
-                    }
-                    self.raw_logs.push_back(format!("[ERROR] {}", err));
+                    self.raw_logs.push_back(format!("❌ Error: {}", err));
                 }
             }
         }
@@ -170,23 +149,17 @@ impl eframe::App for KlsApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         self.poll_events(ctx);
 
-        // Top Header Control Bar
-        egui::TopBottomPanel::top("header_panel").show(ctx, |ui| {
+        egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
             ui.horizontal(|ui| {
                 ui.heading("⚡ Kelly KLS Companion");
                 ui.separator();
 
-                // Serial Port Dropdown
                 ui.label("Port:");
-                egui::ComboBox::from_id_salt("port_combo")
-                    .selected_text(if self.selected_port.is_empty() {
-                        "Select Port"
-                    } else {
-                        &self.selected_port
-                    })
+                egui::ComboBox::from_id_salt("port_select")
+                    .selected_text(if self.selected_port.is_empty() { "Select Port" } else { &self.selected_port })
                     .show_ui(ui, |ui| {
-                        for port in &self.available_ports {
-                            ui.selectable_value(&mut self.selected_port, port.clone(), port);
+                        for p in &self.available_ports {
+                            ui.selectable_value(&mut self.selected_port, p.clone(), p);
                         }
                     });
 
@@ -194,218 +167,78 @@ impl eframe::App for KlsApp {
                     let _ = self.tx_cmd.send(WorkerCommand::ScanPorts);
                 }
 
-                ui.separator();
-                ui.label("Baud:");
-                egui::ComboBox::from_id_salt("baud_combo")
-                    .selected_text(format!("{}", self.baud_rate))
-                    .show_ui(ui, |ui| {
-                        for baud in [9600, 19200, 38400, 57600, 115200] {
-                            ui.selectable_value(&mut self.baud_rate, baud, baud.to_string());
-                        }
-                    });
-
-                ui.separator();
-
-                // Connect / Disconnect Button
                 if self.is_connected {
                     if ui.button("🔴 Disconnect").clicked() {
                         let _ = self.tx_cmd.send(WorkerCommand::Disconnect);
                     }
-                } else {
-                    if ui
-                        .add_enabled(!self.selected_port.is_empty(), egui::Button::new("🔌 Connect"))
-                        .clicked()
-                    {
-                        let _ = self.tx_cmd.send(WorkerCommand::Connect {
-                            port_name: self.selected_port.clone(),
-                            baud_rate: self.baud_rate,
-                        });
-                    }
+                } else if ui.button("🟢 Connect").clicked() && !self.selected_port.is_empty() {
+                    let _ = self.tx_cmd.send(WorkerCommand::Connect {
+                        port_name: self.selected_port.clone(),
+                        baud_rate: self.baud_rate,
+                    });
                 }
 
                 ui.separator();
-
-                // Connection Status Badge
-                if self.is_connected {
-                    ui.colored_label(egui::Color32::GREEN, "● Connected");
-                } else {
-                    ui.colored_label(egui::Color32::GRAY, "○ Disconnected");
-                }
-            });
-
-            ui.separator();
-
-            // Navigation Tabs
-            ui.horizontal(|ui| {
-                ui.selectable_value(&mut self.current_tab, AppTab::Dashboard, "📊 Dashboard");
-                ui.selectable_value(&mut self.current_tab, AppTab::LiveChart, "📈 Live Charts");
-                ui.selectable_value(&mut self.current_tab, AppTab::Parameters, "⚙ Parameters");
-                ui.selectable_value(&mut self.current_tab, AppTab::RawLogs, "📜 Raw Diagnostics");
-            });
-        });
-
-        // Bottom Status Bar
-        egui::TopBottomPanel::bottom("status_bar").show(ctx, |ui| {
-            ui.horizontal(|ui| {
                 ui.label(format!("Status: {}", self.status_msg));
             });
         });
 
-        // Central View Area
+        egui::TopBottomPanel::top("tab_bar").show(ctx, |ui| {
+            ui.horizontal(|ui| {
+                ui.selectable_value(&mut self.current_tab, AppTab::Dashboard, "📊 Dashboard");
+                ui.selectable_value(&mut self.current_tab, AppTab::LiveChart, "📈 Live Chart");
+                ui.selectable_value(&mut self.current_tab, AppTab::Parameters, "⚙ Parameters (OEM)");
+                ui.selectable_value(&mut self.current_tab, AppTab::RawLogs, "📜 Serial Logs");
+            });
+        });
+
         egui::CentralPanel::default().show(ctx, |ui| {
             match self.current_tab {
                 AppTab::Dashboard => self.show_dashboard(ui),
                 AppTab::LiveChart => self.show_live_chart(ui),
-                AppTab::Parameters => self.show_parameters(ui),
+                AppTab::Parameters => self.show_parameters(ui, ctx),
                 AppTab::RawLogs => self.show_raw_logs(ui),
             }
         });
-
-        // Trigger continuous UI updates when connected for smooth live telemetry
-        if self.is_connected {
-            ctx.request_repaint();
-        }
     }
 }
 
 impl KlsApp {
     fn show_dashboard(&mut self, ui: &mut egui::Ui) {
-        ui.heading("Live Controller Status");
-        ui.add_space(8.0);
-
-        egui::Grid::new("telemetry_grid")
-            .num_columns(3)
-            .spacing([20.0, 15.0])
-            .show(ui, |ui| {
-                // Battery Voltage
-                ui.group(|ui| {
-                    ui.vertical(|ui| {
-                        ui.label("Battery Voltage");
-                        ui.heading(format!("{:.1} V", self.telemetry.battery_voltage_v));
-                    });
-                });
-
-                // Phase Current
-                ui.group(|ui| {
-                    ui.vertical(|ui| {
-                        ui.label("Phase Current");
-                        ui.heading(format!("{:.1} A", self.telemetry.phase_current_a));
-                    });
-                });
-
-                // Motor RPM
-                ui.group(|ui| {
-                    ui.vertical(|ui| {
-                        ui.label("Motor RPM");
-                        ui.heading(format!("{} RPM", self.telemetry.rpm));
-                    });
-                });
-
-                ui.end_row();
-
-                // Controller Temp
-                ui.group(|ui| {
-                    ui.vertical(|ui| {
-                        ui.label("Controller Temp");
-                        ui.heading(format!("{} °C", self.telemetry.controller_temp_c));
-                    });
-                });
-
-                // Motor Temp
-                ui.group(|ui| {
-                    ui.vertical(|ui| {
-                        ui.label("Motor Temp");
-                        ui.heading(format!("{} °C", self.telemetry.motor_temp_c));
-                    });
-                });
-
-                // Error Code
-                ui.group(|ui| {
-                    ui.vertical(|ui| {
-                        ui.label("Error Status");
-                        if self.telemetry.error_code == 0 {
-                            ui.colored_label(egui::Color32::GREEN, "✔ Normal (0x00)");
-                        } else {
-                            ui.colored_label(
-                                egui::Color32::RED,
-                                format!("⚠ Fault: 0x{:04X}", self.telemetry.error_code),
-                            );
-                        }
-                    });
-                });
-
-                ui.end_row();
-            });
-
-        ui.add_space(15.0);
-        ui.separator();
+        ui.heading("Telemetry Overview");
         ui.add_space(10.0);
 
-        // Throttle & Brake Bars
-        ui.group(|ui| {
-            ui.vertical(|ui| {
-                ui.label(format!("Throttle: {}% (Raw: {})", self.telemetry.throttle_pct, self.telemetry.throttle));
-                ui.add(egui::ProgressBar::new(self.telemetry.throttle_pct as f32 / 100.0));
-
-                ui.add_space(5.0);
-
-                ui.label(format!("Brake Pedal: {}% (Raw: {})", self.telemetry.brake_pct, self.telemetry.brake_pedal));
-                ui.add(egui::ProgressBar::new(self.telemetry.brake_pct as f32 / 100.0));
+        ui.horizontal(|ui| {
+            ui.group(|ui| {
+                ui.label("Voltage");
+                ui.heading(format!("{:.1} V", self.telemetry.battery_voltage_v));
             });
-        });
-
-        ui.add_space(10.0);
-
-        // Switches & Hall Status
-        ui.group(|ui| {
-            ui.vertical(|ui| {
-                ui.label("Digital Inputs & Hall Sensors");
-                ui.add_space(5.0);
-                ui.horizontal(|ui| {
-                    let pill = |ui: &mut egui::Ui, label: &str, active: bool| {
-                        if active {
-                            ui.colored_label(egui::Color32::GREEN, format!("🟢 {}", label));
-                        } else {
-                            ui.colored_label(egui::Color32::GRAY, format!("⚪ {}", label));
-                        }
-                    };
-
-                    pill(ui, "Fwd Sw", self.telemetry.forward_switch);
-                    ui.add_space(10.0);
-                    pill(ui, "Rev Sw", self.telemetry.reverse);
-                    ui.add_space(10.0);
-                    pill(ui, "Brake Sw", self.telemetry.brake_switch);
-                    ui.add_space(10.0);
-                    pill(ui, "Foot Sw", self.telemetry.foot_switch);
-                    ui.add_space(15.0);
-                    ui.separator();
-                    ui.add_space(15.0);
-                    pill(ui, "Hall A", self.telemetry.hall_a);
-                    ui.add_space(10.0);
-                    pill(ui, "Hall B", self.telemetry.hall_b);
-                    ui.add_space(10.0);
-                    pill(ui, "Hall C", self.telemetry.hall_c);
-                });
+            ui.group(|ui| {
+                ui.label("Phase Current");
+                ui.heading(format!("{:.1} A", self.telemetry.phase_current_a));
+            });
+            ui.group(|ui| {
+                ui.label("Motor RPM");
+                ui.heading(format!("{} RPM", self.telemetry.rpm));
+            });
+            ui.group(|ui| {
+                ui.label("Ctrl Temp");
+                ui.heading(format!("{} °C", self.telemetry.controller_temp_c));
+            });
+            ui.group(|ui| {
+                ui.label("Motor Temp");
+                ui.heading(format!("{} °C", self.telemetry.motor_temp_c));
             });
         });
     }
 
     fn show_live_chart(&mut self, ui: &mut egui::Ui) {
-        ui.horizontal(|ui| {
-            ui.heading("Real-time Telemetry Plot");
-            ui.separator();
-            ui.label("Time Window:");
-            ui.add(egui::Slider::new(&mut self.max_history_sec, 10.0..=300.0).suffix(" s"));
-        });
-
-        ui.add_space(8.0);
-
+        ui.heading("Real-time Telemetry Plot");
         let v_points: PlotPoints = self.voltage_history.iter().copied().collect();
         let i_points: PlotPoints = self.current_history.iter().copied().collect();
         let rpm_points: PlotPoints = self.rpm_history.iter().copied().collect();
 
         Plot::new("telemetry_plot")
-            .view_aspect(2.0)
             .legend(egui_plot::Legend::default())
             .show(ui, |plot_ui| {
                 plot_ui.line(Line::new(v_points).name("Voltage (V)").color(egui::Color32::LIGHT_BLUE));
@@ -414,69 +247,154 @@ impl KlsApp {
             });
     }
 
-    fn show_parameters(&mut self, ui: &mut egui::Ui) {
-        ui.heading("Parameter Read / Write (KLS Command 0x1B / 0x42)");
+    fn show_parameters(&mut self, ui: &mut egui::Ui, ctx: &egui::Context) {
+        ui.horizontal(|ui| {
+            ui.heading("Kelly KLS Controller Parameters");
+            ui.separator();
+
+            if ui.button("📥 Read All").clicked() {
+                let addrs: Vec<u8> = get_all_param_defs().iter().map(|d| d.addr).collect();
+                let _ = self.tx_cmd.send(WorkerCommand::ReadAllParams(addrs));
+            }
+
+            if ui.button("💾 Export JSON").clicked() {
+                let profile = ParamProfile {
+                    vehicle_name: "KLS-Profile".to_string(),
+                    values: self.param_values.clone(),
+                    text_values: self.text_values.clone(),
+                };
+                if let Ok(json) = export_profile_to_json(&profile) {
+                    if let Some(path) = rfd::FileDialog::new().set_file_name("kls_params.json").save_file() {
+                        let _ = std::fs::write(path, json);
+                    }
+                }
+            }
+
+            if ui.button("📂 Import JSON").clicked() {
+                if let Some(path) = rfd::FileDialog::new().pick_file() {
+                    if let Ok(content) = std::fs::read_to_string(path) {
+                        if let Ok(profile) = import_profile_from_json(&content) {
+                            self.param_values = profile.values;
+                            self.text_values = profile.text_values;
+                        }
+                    }
+                }
+            }
+        });
+
         ui.add_space(8.0);
 
+        // Sub-tabs: Vehicle, Motor, Control
         ui.horizontal(|ui| {
-            ui.label("Address (Hex): 0x");
-            ui.add(egui::DragValue::new(&mut self.param_addr).hexadecimal(2, false, true));
-
-            ui.separator();
-
-            if ui.button("📥 Read Param").clicked() {
-                let _ = self.tx_cmd.send(WorkerCommand::ReadParam {
-                    addr: self.param_addr,
-                });
-            }
+            ui.selectable_value(&mut self.oem_subtab, OemCategory::Vehicle, "🚗 Vehicle");
+            ui.selectable_value(&mut self.oem_subtab, OemCategory::Motor, "⚡ Motor");
+            ui.selectable_value(&mut self.oem_subtab, OemCategory::Control, "🎛 Control");
         });
 
-        ui.add_space(10.0);
-
-        ui.horizontal(|ui| {
-            ui.label("Value (Hex): 0x");
-            ui.add(egui::DragValue::new(&mut self.param_val).hexadecimal(2, false, true));
-
-            ui.separator();
-
-            if ui.button("📤 Write Param").clicked() {
-                let _ = self.tx_cmd.send(WorkerCommand::WriteParam {
-                    addr: self.param_addr,
-                    value: self.param_val,
-                });
-            }
-        });
-
-        ui.add_space(15.0);
         ui.separator();
-        ui.label("Parameter Log:");
+        ui.add_space(8.0);
 
-        egui::ScrollArea::vertical()
-            .max_height(200.0)
-            .show(ui, |ui| {
-                for log in &self.param_log {
-                    ui.label(log);
-                }
-            });
+        // Disallow write when motor is spinning
+        let motor_spinning = self.telemetry.rpm > 0;
+        if motor_spinning {
+            ui.colored_label(egui::Color32::RED, "⚠ Motor active (RPM > 0). Parameter writes locked for safety.");
+            ui.add_space(5.0);
+        }
+
+        egui::ScrollArea::vertical().show(ui, |ui| {
+            egui::Grid::new("param_grid")
+                .striped(true)
+                .num_columns(5)
+                .spacing([15.0, 8.0])
+                .show(ui, |ui| {
+                    ui.label(egui::RichText::new("Address").strong());
+                    ui.label(egui::RichText::new("Parameter Name").strong());
+                    ui.label(egui::RichText::new("Value").strong());
+                    ui.label(egui::RichText::new("Unit").strong());
+                    ui.label(egui::RichText::new("Action").strong());
+
+                    ui.end_row();
+
+                    for def in get_all_param_defs().iter().filter(|d| d.category == self.oem_subtab) {
+                        ui.label(format!("0x{:02X}", def.addr));
+                        ui.label(def.label);
+
+                        let current_val = *self.param_values.get(&def.addr).unwrap_or(&def.default_val);
+
+                        if def.is_read_only {
+                            ui.add_enabled_ui(false, |ui| {
+                                ui.label(format!("{}", current_val));
+                            });
+                            ui.label(def.unit);
+                            ui.label("🔒 Read-Only");
+                        } else {
+                            let mut val = current_val;
+                            let drag = egui::DragValue::new(&mut val)
+                                .range(def.min_val..=def.max_val);
+
+
+                            if ui.add(drag).changed() {
+                                self.param_values.insert(def.addr, val);
+                            }
+
+                            ui.label(def.unit);
+
+                            let can_write = self.is_connected && !motor_spinning;
+                            ui.add_enabled_ui(can_write, |ui| {
+                                if ui.button("📤 Write").clicked() {
+                                    if def.is_critical {
+                                        self.pending_write = Some((def.addr, val, def.label));
+                                        self.show_confirm_modal = true;
+                                    } else {
+                                        let _ = self.tx_cmd.send(WorkerCommand::WriteParam {
+                                            addr: def.addr,
+                                            value: val as u8,
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                        ui.end_row();
+                    }
+                });
+        });
+
+        // Safety Modal Dialog
+        if self.show_confirm_modal {
+            if let Some((addr, val, label)) = self.pending_write {
+                egui::Window::new("⚠ Confirm Critical Parameter Write")
+                    .collapsible(false)
+                    .resizable(false)
+                    .show(ctx, |ui| {
+                        ui.label(format!("You are modifying critical parameter: {}", label));
+                        ui.label(format!("Address: 0x{:02X} -> New Value: {}", addr, val));
+                        ui.colored_label(egui::Color32::RED, "Warning: Incorrect values may cause motor runaway or hardware failure!");
+
+                        ui.horizontal(|ui| {
+                            if ui.button("✔ Confirm Write").clicked() {
+                                let _ = self.tx_cmd.send(WorkerCommand::WriteParam {
+                                    addr,
+                                    value: val as u8,
+                                });
+                                self.show_confirm_modal = false;
+                                self.pending_write = None;
+                            }
+                            if ui.button("❌ Cancel").clicked() {
+                                self.show_confirm_modal = false;
+                                self.pending_write = None;
+                            }
+                        });
+                    });
+            }
+        }
     }
 
     fn show_raw_logs(&mut self, ui: &mut egui::Ui) {
-        ui.horizontal(|ui| {
-            ui.heading("Raw Serial Diagnostics");
-            ui.separator();
-            if ui.button("🗑 Clear Logs").clicked() {
-                self.raw_logs.clear();
+        ui.heading("Serial Communication Logs");
+        egui::ScrollArea::vertical().stick_to_bottom(true).show(ui, |ui| {
+            for log in &self.raw_logs {
+                ui.monospace(log);
             }
         });
-
-        ui.add_space(8.0);
-
-        egui::ScrollArea::vertical()
-            .stick_to_bottom(true)
-            .show(ui, |ui| {
-                for log in &self.raw_logs {
-                    ui.monospace(log);
-                }
-            });
     }
 }
