@@ -1,0 +1,4592 @@
+{
+  "0": {
+    "id_dec": 0,
+    "id_hex": "0x00",
+    "name_zh": "产品型号",
+    "tips": "Module Name，产品型号，无范围",
+    "pro_size": "2",
+    "type": "a",
+    "min": "0",
+    "max": "0"
+  },
+  "1": {
+    "id_dec": 1,
+    "id_hex": "0x01",
+    "name_zh": "刹车踏板",
+    "tips": "刹车AD，范围0~255 对应0~5V",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "2": {
+    "id_dec": 2,
+    "id_hex": "0x02",
+    "name_zh": "刹车开关1",
+    "tips": "刹车开关1状态，范围0或1",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "2"
+  },
+  "3": {
+    "id_dec": 3,
+    "id_hex": "0x03",
+    "name_zh": "安全开关",
+    "tips": "油门安全开关状态，范围0或1",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "2"
+  },
+  "4": {
+    "id_dec": 4,
+    "id_hex": "0x04",
+    "name_zh": "前进开关",
+    "tips": "前进开关状态，范围0或1",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "2"
+  },
+  "5": {
+    "id_dec": 5,
+    "id_hex": "0x05",
+    "name_zh": "后退开关",
+    "tips": "后退开关状态，范围0或1",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "2"
+  },
+  "6": {
+    "id_dec": 6,
+    "id_hex": "0x06",
+    "name_zh": "霍尔A",
+    "tips": "霍尔A，编码器A，范围0或1",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "2"
+  },
+  "7": {
+    "id_dec": 7,
+    "id_hex": "0x07",
+    "name_zh": "霍尔B",
+    "tips": "霍尔B，编码器B，范围0或1",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "2"
+  },
+  "8": {
+    "id_dec": 8,
+    "id_hex": "0x08",
+    "name_zh": "客户代码",
+    "tips": "Special Version，特殊版本，无范围",
+    "pro_size": "2",
+    "type": "a",
+    "min": "0",
+    "max": "0"
+  },
+  "9": {
+    "id_dec": 9,
+    "id_hex": "0x09",
+    "name_zh": "电池电压",
+    "tips": "电池实际电压，范围0~200V",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "200"
+  },
+  "10": {
+    "id_dec": 10,
+    "id_hex": "0x0A",
+    "name_zh": "电机温度",
+    "tips": "电机温度，范围0~150℃",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "150"
+  },
+  "11": {
+    "id_dec": 11,
+    "id_hex": "0x0B",
+    "name_zh": "内部温度",
+    "tips": "控制器温度，范围0~150℃",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "150"
+  },
+  "12": {
+    "id_dec": 12,
+    "id_hex": "0x0C",
+    "name_zh": "序列号",
+    "tips": "Serial Number，序列号，无范围",
+    "pro_size": "2",
+    "type": "h",
+    "min": "0",
+    "max": "0"
+  },
+  "13": {
+    "id_dec": 13,
+    "id_hex": "0x0D",
+    "name_zh": "反馈方向",
+    "tips": "实际运行方向，0前进，1后退",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "2"
+  },
+  "14": {
+    "id_dec": 14,
+    "id_hex": "0x0E",
+    "name_zh": "刹车开关2",
+    "tips": "刹车开关2状态，范围0或1",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "15": {
+    "id_dec": 15,
+    "id_hex": "0x0F",
+    "name_zh": "低速开关",
+    "tips": "保留，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "16": {
+    "id_dec": 16,
+    "id_hex": "0x10",
+    "name_zh": "软件版本",
+    "tips": "Software Version，软件版本，无范围",
+    "pro_size": "2",
+    "type": "h",
+    "min": "0",
+    "max": "0"
+  },
+  "18": {
+    "id_dec": 18,
+    "id_hex": "0x12",
+    "name_zh": "电机速度",
+    "tips": "电机速度，范围0~10000",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "10000"
+  },
+  "20": {
+    "id_dec": 20,
+    "id_hex": "0x14",
+    "name_zh": "启动高踏板",
+    "tips": "0禁止，1使能，上电防飞车功能，上电时油门有值禁止输出并报错",
+    "pro_size": "0",
+    "type": "uo",
+    "min": "0",
+    "max": "1"
+  },
+  "21": {
+    "id_dec": 21,
+    "id_hex": "0x15",
+    "name_zh": "油门安全开关",
+    "tips": "0禁止，1使能，此开关闭合时，油门踏板有效",
+    "pro_size": "0",
+    "type": "uo",
+    "min": "0",
+    "max": "1"
+  },
+  "22": {
+    "id_dec": 22,
+    "id_hex": "0x16",
+    "name_zh": "启动等待时间",
+    "tips": "Startup Time，上电后的等待时间，范围0~20",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "20"
+  },
+  "23": {
+    "id_dec": 23,
+    "id_hex": "0x17",
+    "name_zh": "控制器电压",
+    "tips": "Controller Voltage，控制器电压，范围0~612",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "612"
+  },
+  "24": {
+    "id_dec": 24,
+    "id_hex": "0x18",
+    "name_zh": "航模最大值",
+    "tips": "航模遥控器最大计数，范围0~10000",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "10000"
+  },
+  "25": {
+    "id_dec": 25,
+    "id_hex": "0x19",
+    "name_zh": "欠压值",
+    "tips": "Low Voltage Value，欠压报错值，范围0~1000",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "1000"
+  },
+  "26": {
+    "id_dec": 26,
+    "id_hex": "0x1A",
+    "name_zh": "保留",
+    "tips": "保留，范围0~10000",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "10000"
+  },
+  "27": {
+    "id_dec": 27,
+    "id_hex": "0x1B",
+    "name_zh": "过压值",
+    "tips": "High Voltage Value，过压报错值，范围0~1000",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "1000"
+  },
+  "28": {
+    "id_dec": 28,
+    "id_hex": "0x1C",
+    "name_zh": "保留",
+    "tips": "保留，范围0~10000",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "10000"
+  },
+  "29": {
+    "id_dec": 29,
+    "id_hex": "0x1D",
+    "name_zh": "霍尔电流计额定值",
+    "tips": "霍尔电流计电流标称值，范围0~1000A",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "1000"
+  },
+  "30": {
+    "id_dec": 30,
+    "id_hex": "0x1E",
+    "name_zh": "保留",
+    "tips": "保留，范围0~10000",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "10000"
+  },
+  "31": {
+    "id_dec": 31,
+    "id_hex": "0x1F",
+    "name_zh": "相电流最大电流AD",
+    "tips": "霍尔电流计额定电流对应的AD值，禁止修改，除非ADC模块采样位数发生变化，范围409(10位)~2048(12位)",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "409",
+    "max": "2048"
+  },
+  "32": {
+    "id_dec": 32,
+    "id_hex": "0x20",
+    "name_zh": "保留",
+    "tips": "保留，范围0~10000",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "10000"
+  },
+  "33": {
+    "id_dec": 33,
+    "id_hex": "0x21",
+    "name_zh": "A相电流零点AD",
+    "tips": "Phase A Zero current，范围474(10位)~2200(12位)",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "474",
+    "max": "2200"
+  },
+  "34": {
+    "id_dec": 34,
+    "id_hex": "0x22",
+    "name_zh": "保留",
+    "tips": "保留，范围0~10000",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "10000"
+  },
+  "35": {
+    "id_dec": 35,
+    "id_hex": "0x23",
+    "name_zh": "B相电流零点AD",
+    "tips": "Phase B Zero current，范围474(10位)~2200(12位)",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "474",
+    "max": "2200"
+  },
+  "36": {
+    "id_dec": 36,
+    "id_hex": "0x24",
+    "name_zh": "保留",
+    "tips": "保留，范围0~10000",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "10000"
+  },
+  "37": {
+    "id_dec": 37,
+    "id_hex": "0x25",
+    "name_zh": "相线电流百分比",
+    "tips": "Current Percent，范围20~100",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "20",
+    "max": "100"
+  },
+  "38": {
+    "id_dec": 38,
+    "id_hex": "0x26",
+    "name_zh": "电池电流限制",
+    "tips": "Battry Current Limit，限制最大电池电流，范围20~100",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "20",
+    "max": "100"
+  },
+  "39": {
+    "id_dec": 39,
+    "id_hex": "0x27",
+    "name_zh": "电池电流限制弱化",
+    "tips": "Battry Current Limit Weaking，低压切断电压*1.15开始弱化，此标定值即弱化后剩余的百分比。范围20~100",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "20",
+    "max": "100"
+  },
+  "40": {
+    "id_dec": 40,
+    "id_hex": "0x28",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "41": {
+    "id_dec": 41,
+    "id_hex": "0x29",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "42": {
+    "id_dec": 42,
+    "id_hex": "0x2A",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "43": {
+    "id_dec": 43,
+    "id_hex": "0x2B",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "44": {
+    "id_dec": 44,
+    "id_hex": "0x2C",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "45": {
+    "id_dec": 45,
+    "id_hex": "0x2D",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "46": {
+    "id_dec": 46,
+    "id_hex": "0x2E",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "47": {
+    "id_dec": 47,
+    "id_hex": "0x2F",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "48": {
+    "id_dec": 48,
+    "id_hex": "0x30",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "49": {
+    "id_dec": 49,
+    "id_hex": "0x31",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "50": {
+    "id_dec": 50,
+    "id_hex": "0x32",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "51": {
+    "id_dec": 51,
+    "id_hex": "0x33",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "52": {
+    "id_dec": 52,
+    "id_hex": "0x34",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "53": {
+    "id_dec": 53,
+    "id_hex": "0x35",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "54": {
+    "id_dec": 54,
+    "id_hex": "0x36",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "55": {
+    "id_dec": 55,
+    "id_hex": "0x37",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "56": {
+    "id_dec": 56,
+    "id_hex": "0x38",
+    "name_zh": "电机参数辨识使能",
+    "tips": "Identify Motor Parameters Enable Flag，0x55表示退出，0xAA表示进入",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "57": {
+    "id_dec": 57,
+    "id_hex": "0x39",
+    "name_zh": "PCB切断 ℃",
+    "tips": "PCB切断温度，标称值110℃，过温则切断，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "58": {
+    "id_dec": 58,
+    "id_hex": "0x3A",
+    "name_zh": "PCB恢复 ℃",
+    "tips": "PCB过温恢复温度，标称值90℃，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "59": {
+    "id_dec": 59,
+    "id_hex": "0x3B",
+    "name_zh": "PCB高温 Str℃",
+    "tips": "PCB高温弱化起始温度，标称值100℃，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "60": {
+    "id_dec": 60,
+    "id_hex": "0x3C",
+    "name_zh": "PCB高温 %",
+    "tips": "PCB高温弱化百分比，标称值50%，“PCB高温 Str℃”至“PCB切断 ℃”的弱化比例，范围0~100",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "100"
+  },
+  "61": {
+    "id_dec": 61,
+    "id_hex": "0x3D",
+    "name_zh": "PCB低温 End℃",
+    "tips": "PCB低温弱化结束温度，标称值50℃，此温度至中温弱化起始温度之间不弱化，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "62": {
+    "id_dec": 62,
+    "id_hex": "0x3E",
+    "name_zh": "PCB中温 %",
+    "tips": "PCB中温弱化百分比，标称值35%，“PCB中温 Str℃”至“PCB高温 Str℃”的弱化比例，范围0~100",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "100"
+  },
+  "63": {
+    "id_dec": 63,
+    "id_hex": "0x3F",
+    "name_zh": "PCB低温 Str℃",
+    "tips": "PCB低温弱化起始温度，标称值0℃，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "64": {
+    "id_dec": 64,
+    "id_hex": "0x40",
+    "name_zh": "PCB低温 %",
+    "tips": "PCB低温弱化百分比，标称值30%，“PCB低温 End℃”至“PCB低温 Str℃”的弱化比例，范围0~100",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "100"
+  },
+  "65": {
+    "id_dec": 65,
+    "id_hex": "0x41",
+    "name_zh": "PCB负温 End℃",
+    "tips": "PCB负温弱化结束温度，标称值216(-40)℃，范围0~255",
+    "pro_size": "1",
+    "type": "so",
+    "min": "0",
+    "max": "255"
+  },
+  "66": {
+    "id_dec": 66,
+    "id_hex": "0x42",
+    "name_zh": "PCB负温 %",
+    "tips": "PCB负温弱化百分比，标称值40%，“PCB低温 Str℃”至“PCB负温 End℃”的弱化比例，范围0~100",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "100"
+  },
+  "67": {
+    "id_dec": 67,
+    "id_hex": "0x43",
+    "name_zh": "PCB基准℃",
+    "tips": "PCB基准温度，标称值0℃，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "68": {
+    "id_dec": 68,
+    "id_hex": "0x44",
+    "name_zh": "PCB中温 Str℃",
+    "tips": "PCB中温弱化起始温度，标称值80，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "69": {
+    "id_dec": 69,
+    "id_hex": "0x45",
+    "name_zh": "HL基准℃",
+    "tips": "HL基准温度，标称值50℃，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "70": {
+    "id_dec": 70,
+    "id_hex": "0x46",
+    "name_zh": "HL高温 End℃",
+    "tips": "HL过温切断温度，标称值120℃，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "71": {
+    "id_dec": 71,
+    "id_hex": "0x47",
+    "name_zh": "HL高温 Str℃",
+    "tips": "HL高温弱化起始温度，标称值90℃，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "72": {
+    "id_dec": 72,
+    "id_hex": "0x48",
+    "name_zh": "HL高温 %",
+    "tips": "HL高温弱化百分比，标称值70%，“HL高温 Str℃”至“HL高温 End℃”的弱化比例，范围0~100",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "100"
+  },
+  "73": {
+    "id_dec": 73,
+    "id_hex": "0x49",
+    "name_zh": "HL恢复 ℃",
+    "tips": "HL过温恢复温度，标称值110℃，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "74": {
+    "id_dec": 74,
+    "id_hex": "0x4A",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "75": {
+    "id_dec": 75,
+    "id_hex": "0x4B",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "76": {
+    "id_dec": 76,
+    "id_hex": "0x4C",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "77": {
+    "id_dec": 77,
+    "id_hex": "0x4D",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "78": {
+    "id_dec": 78,
+    "id_hex": "0x4E",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "79": {
+    "id_dec": 79,
+    "id_hex": "0x4F",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "80": {
+    "id_dec": 80,
+    "id_hex": "0x50",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "81": {
+    "id_dec": 81,
+    "id_hex": "0x51",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "82": {
+    "id_dec": 82,
+    "id_hex": "0x52",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "83": {
+    "id_dec": 83,
+    "id_hex": "0x53",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "84": {
+    "id_dec": 84,
+    "id_hex": "0x54",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "85": {
+    "id_dec": 85,
+    "id_hex": "0x55",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "86": {
+    "id_dec": 86,
+    "id_hex": "0x56",
+    "name_zh": "刷机模式",
+    "tips": "Bootloader Mode，刷机模式，0xff表示使能，其它则表示禁止",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "87": {
+    "id_dec": 87,
+    "id_hex": "0x57",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "88": {
+    "id_dec": 88,
+    "id_hex": "0x58",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "89": {
+    "id_dec": 89,
+    "id_hex": "0x59",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "90": {
+    "id_dec": 90,
+    "id_hex": "0x5A",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "91": {
+    "id_dec": 91,
+    "id_hex": "0x5B",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "92": {
+    "id_dec": 92,
+    "id_hex": "0x5C",
+    "name_zh": "油门低端报错点",
+    "tips": "小于标定值报油门类型错误，范围0~20%",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "20"
+  },
+  "93": {
+    "id_dec": 93,
+    "id_hex": "0x5D",
+    "name_zh": "油门高端报错点",
+    "tips": "大于标定值报油门类型错误，范围80~100%",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "80",
+    "max": "100"
+  },
+  "94": {
+    "id_dec": 94,
+    "id_hex": "0x5E",
+    "name_zh": "油门速率",
+    "tips": "Acc Speed，油门响应速率，值越小响应越快，范围10~100",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "10",
+    "max": "100"
+  },
+  "95": {
+    "id_dec": 95,
+    "id_hex": "0x5F",
+    "name_zh": "油门类型",
+    "tips": "TPS Type, 油门类型，范围0:NO,1:0-5V,2:1-4V,3:0-5K",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "3"
+  },
+  "96": {
+    "id_dec": 96,
+    "id_hex": "0x60",
+    "name_zh": "油门低死区",
+    "tips": "油门低端死区，范围0~40，对应0%~40%",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "80"
+  },
+  "97": {
+    "id_dec": 97,
+    "id_hex": "0x61",
+    "name_zh": "油门高死区",
+    "tips": "油门高端死区，范围60~100，对应60%~100%",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "120",
+    "max": "200"
+  },
+  "98": {
+    "id_dec": 98,
+    "id_hex": "0x62",
+    "name_zh": "油门前进MAP",
+    "tips": "油门前进MAP，范围0~100，定义正向油门50%位置时对应的最大油门值的百分比，决定曲率",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "100"
+  },
+  "99": {
+    "id_dec": 99,
+    "id_hex": "0x63",
+    "name_zh": "油门后退MAP",
+    "tips": "油门后退MAP，范围0~100，定义反向油门50%位置时对应的最大油门值的百分比，决定曲率",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "100"
+  },
+  "100": {
+    "id_dec": 100,
+    "id_hex": "0x64",
+    "name_zh": "刹车类型",
+    "tips": "BRAKE Type, 刹车类型，范围0:NO,1:0-5V,2:1-4V,3:0-5K",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "3"
+  },
+  "101": {
+    "id_dec": 101,
+    "id_hex": "0x65",
+    "name_zh": "刹车低死区",
+    "tips": "刹车低端死区，范围0~40，对应0%~40%",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "80"
+  },
+  "102": {
+    "id_dec": 102,
+    "id_hex": "0x66",
+    "name_zh": "刹车高死区",
+    "tips": "刹车高端死区，范围60~100，对应60%~100%",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "120",
+    "max": "200"
+  },
+  "103": {
+    "id_dec": 103,
+    "id_hex": "0x67",
+    "name_zh": "刹车MAP",
+    "tips": "刹车MAP，范围0~100，定义刹车50%位置时对应的最大刹车值的百分比，决定曲率",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "100"
+  },
+  "104": {
+    "id_dec": 104,
+    "id_hex": "0x68",
+    "name_zh": "控制模式",
+    "tips": "Control Mode，0:OpenLoop, 1:Speed CloseLoop,2:Torque CloseLoop",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "2"
+  },
+  "105": {
+    "id_dec": 105,
+    "id_hex": "0x69",
+    "name_zh": "最大输出频率",
+    "tips": "Max Output Frequency，最大输出频率，范围0~300Hz",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "300"
+  },
+  "107": {
+    "id_dec": 107,
+    "id_hex": "0x6B",
+    "name_zh": "最大转速",
+    "tips": "Max speed，最大转速，范围0~60000rpm",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "60000"
+  },
+  "109": {
+    "id_dec": 109,
+    "id_hex": "0x6D",
+    "name_zh": "最大前进速度 %",
+    "tips": "Forward Speed Limit，范围30~100",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "30",
+    "max": "100"
+  },
+  "110": {
+    "id_dec": 110,
+    "id_hex": "0x6E",
+    "name_zh": "最大倒车速度 %",
+    "tips": "Reverse Speed Limit，范围20~100",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "20",
+    "max": "100"
+  },
+  "111": {
+    "id_dec": 111,
+    "id_hex": "0x6F",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "112": {
+    "id_dec": 112,
+    "id_hex": "0x70",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "113": {
+    "id_dec": 113,
+    "id_hex": "0x71",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "114": {
+    "id_dec": 114,
+    "id_hex": "0x72",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "115": {
+    "id_dec": 115,
+    "id_hex": "0x73",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "116": {
+    "id_dec": 116,
+    "id_hex": "0x74",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "117": {
+    "id_dec": 117,
+    "id_hex": "0x75",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "118": {
+    "id_dec": 118,
+    "id_hex": "0x76",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "119": {
+    "id_dec": 119,
+    "id_hex": "0x77",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "120": {
+    "id_dec": 120,
+    "id_hex": "0x78",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "121": {
+    "id_dec": 121,
+    "id_hex": "0x79",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "122": {
+    "id_dec": 122,
+    "id_hex": "0x7A",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "123": {
+    "id_dec": 123,
+    "id_hex": "0x7B",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "124": {
+    "id_dec": 124,
+    "id_hex": "0x7C",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "125": {
+    "id_dec": 125,
+    "id_hex": "0x7D",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "126": {
+    "id_dec": 126,
+    "id_hex": "0x7E",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "127": {
+    "id_dec": 127,
+    "id_hex": "0x7F",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "128": {
+    "id_dec": 128,
+    "id_hex": "0x80",
+    "name_zh": "电流Q环比例系数Kp",
+    "tips": "电流Q环比例系数Kp，范围0~32767，对应0~3.9999",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "32767"
+  },
+  "130": {
+    "id_dec": 130,
+    "id_hex": "0x82",
+    "name_zh": "电流Q环积分系数Ki",
+    "tips": "电流Q环积分系数Ki，范围0~32767，对应0~3.9999",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "32767"
+  },
+  "132": {
+    "id_dec": 132,
+    "id_hex": "0x84",
+    "name_zh": "电流Q环输出限幅值",
+    "tips": "电流Q环输出限幅值，范围32767~56756，对应0.9999~1.732",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "32767",
+    "max": "56756"
+  },
+  "134": {
+    "id_dec": 134,
+    "id_hex": "0x86",
+    "name_zh": "电流D环比例系数Kp",
+    "tips": "电流D环比例系数Kp，范围0~32767，对应0~3.9999",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "32767"
+  },
+  "136": {
+    "id_dec": 136,
+    "id_hex": "0x88",
+    "name_zh": "电流D环积分系数Ki",
+    "tips": "电流D环积分系数Ki，范围0~32767，对应0~3.9999",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "32767"
+  },
+  "138": {
+    "id_dec": 138,
+    "id_hex": "0x8A",
+    "name_zh": "电流D环输出限幅值",
+    "tips": "电流D环输出限幅值，范围23170~32767，对应0.707~0.9999",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "23170",
+    "max": "32767"
+  },
+  "140": {
+    "id_dec": 140,
+    "id_hex": "0x8C",
+    "name_zh": "电压环比例系数Kp",
+    "tips": "电压环比例系数Kp，范围0~32767，对应0~3.9999",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "32767"
+  },
+  "142": {
+    "id_dec": 142,
+    "id_hex": "0x8E",
+    "name_zh": "电压环积分系数Ki",
+    "tips": "电压环积分系数Ki，范围0~32767，对应0~3.9999",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "32767"
+  },
+  "144": {
+    "id_dec": 144,
+    "id_hex": "0x90",
+    "name_zh": "电压环Err限幅值",
+    "tips": "电压环误差信号Err限幅值，范围50~4095",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "50",
+    "max": "4095"
+  },
+  "146": {
+    "id_dec": 146,
+    "id_hex": "0x92",
+    "name_zh": "切换点转速上限值",
+    "tips": "速度传感器为霍尔、由方波切换到正弦波模式时的转速RPM，范围0~65535RPM",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "65535"
+  },
+  "147": {
+    "id_dec": 147,
+    "id_hex": "0x93",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "148": {
+    "id_dec": 148,
+    "id_hex": "0x94",
+    "name_zh": "切换点转速下限值",
+    "tips": "速度传感器为霍尔、由正弦波切换到方波模式时的转速RPM，范围0~65535RPM",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "65535"
+  },
+  "149": {
+    "id_dec": 149,
+    "id_hex": "0x95",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "150": {
+    "id_dec": 150,
+    "id_hex": "0x96",
+    "name_zh": "Iq补偿环Kp",
+    "tips": "转矩电流Iq补偿环比例系数Kp，范围0~32767，对应0~3.9999",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "32767"
+  },
+  "151": {
+    "id_dec": 151,
+    "id_hex": "0x97",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "152": {
+    "id_dec": 152,
+    "id_hex": "0x98",
+    "name_zh": "Iq补偿环Ki",
+    "tips": "转矩电流Iq补偿环积分系数Ki，范围0~32767，对应0~3.9999",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "32767"
+  },
+  "153": {
+    "id_dec": 153,
+    "id_hex": "0x99",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "154": {
+    "id_dec": 154,
+    "id_hex": "0x9A",
+    "name_zh": "Iq补偿环Err限幅值",
+    "tips": "转矩电流Iq补偿环误差信号Err限幅值，范围50~4095",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "50",
+    "max": "4095"
+  },
+  "155": {
+    "id_dec": 155,
+    "id_hex": "0x9B",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "156": {
+    "id_dec": 156,
+    "id_hex": "0x9C",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "157": {
+    "id_dec": 157,
+    "id_hex": "0x9D",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "158": {
+    "id_dec": 158,
+    "id_hex": "0x9E",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "159": {
+    "id_dec": 159,
+    "id_hex": "0x9F",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "160": {
+    "id_dec": 160,
+    "id_hex": "0xA0",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "161": {
+    "id_dec": 161,
+    "id_hex": "0xA1",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "162": {
+    "id_dec": 162,
+    "id_hex": "0xA2",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "163": {
+    "id_dec": 163,
+    "id_hex": "0xA3",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "164": {
+    "id_dec": 164,
+    "id_hex": "0xA4",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "165": {
+    "id_dec": 165,
+    "id_hex": "0xA5",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "166": {
+    "id_dec": 166,
+    "id_hex": "0xA6",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "167": {
+    "id_dec": 167,
+    "id_hex": "0xA7",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "168": {
+    "id_dec": 168,
+    "id_hex": "0xA8",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "169": {
+    "id_dec": 169,
+    "id_hex": "0xA9",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "170": {
+    "id_dec": 170,
+    "id_hex": "0xAA",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "171": {
+    "id_dec": 171,
+    "id_hex": "0xAB",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "172": {
+    "id_dec": 172,
+    "id_hex": "0xAC",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "173": {
+    "id_dec": 173,
+    "id_hex": "0xAD",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "174": {
+    "id_dec": 174,
+    "id_hex": "0xAE",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "175": {
+    "id_dec": 175,
+    "id_hex": "0xAF",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "176": {
+    "id_dec": 176,
+    "id_hex": "0xB0",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "177": {
+    "id_dec": 177,
+    "id_hex": "0xB1",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "178": {
+    "id_dec": 178,
+    "id_hex": "0xB2",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "179": {
+    "id_dec": 179,
+    "id_hex": "0xB3",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "180": {
+    "id_dec": 180,
+    "id_hex": "0xB4",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "181": {
+    "id_dec": 181,
+    "id_hex": "0xB5",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "182": {
+    "id_dec": 182,
+    "id_hex": "0xB6",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "183": {
+    "id_dec": 183,
+    "id_hex": "0xB7",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "184": {
+    "id_dec": 184,
+    "id_hex": "0xB8",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "185": {
+    "id_dec": 185,
+    "id_hex": "0xB9",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "186": {
+    "id_dec": 186,
+    "id_hex": "0xBA",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "187": {
+    "id_dec": 187,
+    "id_hex": "0xBB",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "188": {
+    "id_dec": 188,
+    "id_hex": "0xBC",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "189": {
+    "id_dec": 189,
+    "id_hex": "0xBD",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "190": {
+    "id_dec": 190,
+    "id_hex": "0xBE",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "191": {
+    "id_dec": 191,
+    "id_hex": "0xBF",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "192": {
+    "id_dec": 192,
+    "id_hex": "0xC0",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "193": {
+    "id_dec": 193,
+    "id_hex": "0xC1",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "194": {
+    "id_dec": 194,
+    "id_hex": "0xC2",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "195": {
+    "id_dec": 195,
+    "id_hex": "0xC3",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "196": {
+    "id_dec": 196,
+    "id_hex": "0xC4",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "197": {
+    "id_dec": 197,
+    "id_hex": "0xC5",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "198": {
+    "id_dec": 198,
+    "id_hex": "0xC6",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "199": {
+    "id_dec": 199,
+    "id_hex": "0xC7",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "200": {
+    "id_dec": 200,
+    "id_hex": "0xC8",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "201": {
+    "id_dec": 201,
+    "id_hex": "0xC9",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "202": {
+    "id_dec": 202,
+    "id_hex": "0xCA",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "203": {
+    "id_dec": 203,
+    "id_hex": "0xCB",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "204": {
+    "id_dec": 204,
+    "id_hex": "0xCC",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "205": {
+    "id_dec": 205,
+    "id_hex": "0xCD",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "206": {
+    "id_dec": 206,
+    "id_hex": "0xCE",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "207": {
+    "id_dec": 207,
+    "id_hex": "0xCF",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "208": {
+    "id_dec": 208,
+    "id_hex": "0xD0",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "209": {
+    "id_dec": 209,
+    "id_hex": "0xD1",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "210": {
+    "id_dec": 210,
+    "id_hex": "0xD2",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "211": {
+    "id_dec": 211,
+    "id_hex": "0xD3",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "212": {
+    "id_dec": 212,
+    "id_hex": "0xD4",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "213": {
+    "id_dec": 213,
+    "id_hex": "0xD5",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "214": {
+    "id_dec": 214,
+    "id_hex": "0xD6",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "215": {
+    "id_dec": 215,
+    "id_hex": "0xD7",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "216": {
+    "id_dec": 216,
+    "id_hex": "0xD8",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "217": {
+    "id_dec": 217,
+    "id_hex": "0xD9",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "218": {
+    "id_dec": 218,
+    "id_hex": "0xDA",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "219": {
+    "id_dec": 219,
+    "id_hex": "0xDB",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "220": {
+    "id_dec": 220,
+    "id_hex": "0xDC",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "221": {
+    "id_dec": 221,
+    "id_hex": "0xDD",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "222": {
+    "id_dec": 222,
+    "id_hex": "0xDE",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "223": {
+    "id_dec": 223,
+    "id_hex": "0xDF",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "224": {
+    "id_dec": 224,
+    "id_hex": "0xE0",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "225": {
+    "id_dec": 225,
+    "id_hex": "0xE1",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "226": {
+    "id_dec": 226,
+    "id_hex": "0xE2",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "227": {
+    "id_dec": 227,
+    "id_hex": "0xE3",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "228": {
+    "id_dec": 228,
+    "id_hex": "0xE4",
+    "name_zh": "最小制动转速",
+    "tips": "BRK_SPEED_LIMIT 速度大于此标定值才会进入发电制动状态，范围50~500",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "50",
+    "max": "500"
+  },
+  "230": {
+    "id_dec": 230,
+    "id_hex": "0xE6",
+    "name_zh": "松踏板制动%",
+    "tips": "RLS_TPS Braking Percent，松踏板制动转矩为最大制动转矩的百分比，范围0~50",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "50"
+  },
+  "231": {
+    "id_dec": 231,
+    "id_hex": "0xE7",
+    "name_zh": "空挡制动%",
+    "tips": "NTL Braking Percent，空挡制动转矩为最大制动转矩的百分比，范围0~50",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "50"
+  },
+  "232": {
+    "id_dec": 232,
+    "id_hex": "0xE8",
+    "name_zh": "紧急反向电流%",
+    "tips": "EMR Current Limit Percent，紧急反向转矩为最大转矩的百分比，范围0~100",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "100"
+  },
+  "233": {
+    "id_dec": 233,
+    "id_hex": "0xE9",
+    "name_zh": "紧急反向时间",
+    "tips": "EMR time，紧急制动停止后反向加速时开始计时，为反向加速时间，单位0.1s，范围0~250",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "250"
+  },
+  "234": {
+    "id_dec": 234,
+    "id_hex": "0xEA",
+    "name_zh": "紧急反向速度%",
+    "tips": "EMR Speed Limit，紧急反向的反向加速速度，为最大速度的百分比，范围0~100",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "100"
+  },
+  "235": {
+    "id_dec": 235,
+    "id_hex": "0xEB",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "236": {
+    "id_dec": 236,
+    "id_hex": "0xEC",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "237": {
+    "id_dec": 237,
+    "id_hex": "0xED",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "238": {
+    "id_dec": 238,
+    "id_hex": "0xEE",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "239": {
+    "id_dec": 239,
+    "id_hex": "0xEF",
+    "name_zh": "油门转矩建立时间",
+    "tips": "Accel Time，0到最大驱动转矩的建立时间，0.1~25.0秒，精度0.1秒",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "250"
+  },
+  "240": {
+    "id_dec": 240,
+    "id_hex": "0xF0",
+    "name_zh": "油门转矩释放时间",
+    "tips": "Accel Release Time，最大驱动转矩到0的释放时间，0.1~25.0秒，精度0.1秒",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "250"
+  },
+  "241": {
+    "id_dec": 241,
+    "id_hex": "0xF1",
+    "name_zh": "刹车转矩建立时间",
+    "tips": "Brake Time，0到最大制动转矩的建立时间，0.1~25.0秒，精度0.1秒",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "250"
+  },
+  "242": {
+    "id_dec": 242,
+    "id_hex": "0xF2",
+    "name_zh": "刹车转矩释放时间",
+    "tips": "Brake Release Time，最大制动转矩到0的释放时间，0.1~25.0秒，精度0.1秒",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "250"
+  },
+  "243": {
+    "id_dec": 243,
+    "id_hex": "0xF3",
+    "name_zh": "刹车开关制动%",
+    "tips": "BRK_SW Braking Percent，刹车开关制动转矩为最大制动转矩的百分比，范围0~100",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "100"
+  },
+  "244": {
+    "id_dec": 244,
+    "id_hex": "0xF4",
+    "name_zh": "换向制动%",
+    "tips": "IVT Braking Percent，换向时的制动转矩为最大制动转矩的百分比，范围0~100",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "100"
+  },
+  "245": {
+    "id_dec": 245,
+    "id_hex": "0xF5",
+    "name_zh": "爬坡防溜补偿%",
+    "tips": "Compensation Percent，爬坡防溜时的补偿转矩为最大驱动转矩的百分比，范围0~100",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "100"
+  },
+  "246": {
+    "id_dec": 246,
+    "id_hex": "0xF6",
+    "name_zh": "换向制动最大转速",
+    "tips": "IVT BRK Max Motor RPM，允许换向制动的速度最大值，范围0~3000rpm",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "3000"
+  },
+  "248": {
+    "id_dec": 248,
+    "id_hex": "0xF8",
+    "name_zh": "换向制动最小转速",
+    "tips": "IVT BRK Min Motor RPM，允许换向制动的速度最小值，范围0~500rpm",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "500"
+  },
+  "250": {
+    "id_dec": 250,
+    "id_hex": "0xFA",
+    "name_zh": "转矩模式速度环Kp",
+    "tips": "转矩模式速度环比例系数Kp，范围0~32767，对应0~3.9999",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "32767"
+  },
+  "252": {
+    "id_dec": 252,
+    "id_hex": "0xFC",
+    "name_zh": "转矩模式速度环Ki",
+    "tips": "转矩模式速度环积分系数Ki，范围0~32767，对应0~3.9999",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "32767"
+  },
+  "254": {
+    "id_dec": 254,
+    "id_hex": "0xFE",
+    "name_zh": "速度环Err限幅值",
+    "tips": "转矩模式速度环误差信号Err限幅值，范围50~4095",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "50",
+    "max": "4095"
+  },
+  "256": {
+    "id_dec": 256,
+    "id_hex": "0x100",
+    "name_zh": "电机额定电压",
+    "tips": "Motor Nominal Voltage，电机额定电压，范围0~380V",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "380"
+  },
+  "258": {
+    "id_dec": 258,
+    "id_hex": "0x102",
+    "name_zh": "电机额定电流",
+    "tips": "Motor Nominal Current，电机额定电流，范围0~1000A",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "1000"
+  },
+  "260": {
+    "id_dec": 260,
+    "id_hex": "0x104",
+    "name_zh": "电机额定频率",
+    "tips": "Nominal Frequency，电机额定频率，范围0~300Hz",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "300"
+  },
+  "262": {
+    "id_dec": 262,
+    "id_hex": "0x106",
+    "name_zh": "电机额定转速",
+    "tips": "Motor Nominal speed，电机额定转速，范围0~60000rpm",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "60000"
+  },
+  "264": {
+    "id_dec": 264,
+    "id_hex": "0x108",
+    "name_zh": "电机最大频率",
+    "tips": "Motor Max Frequency，电机允许的最大频率，范围0~300Hz",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "300"
+  },
+  "266": {
+    "id_dec": 266,
+    "id_hex": "0x10A",
+    "name_zh": "电机最大转速",
+    "tips": "Motor Max speed，电机允许的最大转速，范围0~60000rpm",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "60000"
+  },
+  "268": {
+    "id_dec": 268,
+    "id_hex": "0x10C",
+    "name_zh": "电机极数",
+    "tips": "Motor Poles，电机级数，极对数*2，范围2~32",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "2",
+    "max": "32"
+  },
+  "269": {
+    "id_dec": 269,
+    "id_hex": "0x10D",
+    "name_zh": "速度传感器类型",
+    "tips": "Speed Sensor Type，速度传感器类型，0:NO,1:正交编码器,2:Hall,3:旋转变压器",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "4"
+  },
+  "270": {
+    "id_dec": 270,
+    "id_hex": "0x10E",
+    "name_zh": "编码器线数",
+    "tips": "Encoder Pulses，编码器线数，范围0~65535",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "65535"
+  },
+  "272": {
+    "id_dec": 272,
+    "id_hex": "0x110",
+    "name_zh": "旋变极数",
+    "tips": "旋转变压器极数，即旋转变压器齿数*2，范围2~32",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "2",
+    "max": "32"
+  },
+  "273": {
+    "id_dec": 273,
+    "id_hex": "0x111",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "274": {
+    "id_dec": 274,
+    "id_hex": "0x112",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "275": {
+    "id_dec": 275,
+    "id_hex": "0x113",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "276": {
+    "id_dec": 276,
+    "id_hex": "0x114",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "277": {
+    "id_dec": 277,
+    "id_hex": "0x115",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "278": {
+    "id_dec": 278,
+    "id_hex": "0x116",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "279": {
+    "id_dec": 279,
+    "id_hex": "0x117",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "280": {
+    "id_dec": 280,
+    "id_hex": "0x118",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "281": {
+    "id_dec": 281,
+    "id_hex": "0x119",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "282": {
+    "id_dec": 282,
+    "id_hex": "0x11A",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "283": {
+    "id_dec": 283,
+    "id_hex": "0x11B",
+    "name_zh": "保留",
+    "tips": "保留项，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "284": {
+    "id_dec": 284,
+    "id_hex": "0x11C",
+    "name_zh": "电机定子电阻",
+    "tips": "Rs，电机定子电阻，除以32768后为实际值，单位欧姆，范围1~0x7FFFFFFF",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "1",
+    "max": "0x7FFFFFFF"
+  },
+  "288": {
+    "id_dec": 288,
+    "id_hex": "0x120",
+    "name_zh": "电机转子电阻",
+    "tips": "Rr，电机转子电阻，除以32768后为实际值，单位欧姆，范围1~0x7FFFFFFF",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "1",
+    "max": "0x7FFFFFFF"
+  },
+  "292": {
+    "id_dec": 292,
+    "id_hex": "0x124",
+    "name_zh": "电机漏感",
+    "tips": "Lls or Llr，电机定子漏感或转子漏感，除以2的30次方后为实际值，单位H，范围1~0x7FFFFFFF",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "1",
+    "max": "0x7FFFFFFF"
+  },
+  "296": {
+    "id_dec": 296,
+    "id_hex": "0x128",
+    "name_zh": "电机定子电感",
+    "tips": "Ls or Lr，电机定子电感或转子电感，除以2的30次方后为实际值，单位H，范围1~0x7FFFFFFF",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "1",
+    "max": "0x7FFFFFFF"
+  },
+  "300": {
+    "id_dec": 300,
+    "id_hex": "0x12C",
+    "name_zh": "额定转子时间常数",
+    "tips": "Motor Nominal Tr，电机额定转子时间常数，除以32768后为实际值，单位秒，范围1~0x7FFFFFFF",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "1",
+    "max": "0x7FFFFFFF"
+  },
+  "304": {
+    "id_dec": 304,
+    "id_hex": "0x130",
+    "name_zh": "最大转子时间常数",
+    "tips": "Motor Max Tr，电机最大转子时间常数，除以32768后为实际值，单位秒，范围1~0x7FFFFFFF",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "1",
+    "max": "0x7FFFFFFF"
+  },
+  "308": {
+    "id_dec": 308,
+    "id_hex": "0x134",
+    "name_zh": "电机空载电流",
+    "tips": "电机空载电流，即额定励磁电流，范围1~1000A",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "1",
+    "max": "1000"
+  },
+  "310": {
+    "id_dec": 310,
+    "id_hex": "0x136",
+    "name_zh": "最小励磁电流",
+    "tips": "电机的最小励磁电流，范围1~1000A",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "1",
+    "max": "1000"
+  },
+  "312": {
+    "id_dec": 312,
+    "id_hex": "0x138",
+    "name_zh": "启动转差限制RPM",
+    "tips": "电机起步时的最大转差限制值，范围1~1000RPM",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "1",
+    "max": "1000"
+  },
+  "314": {
+    "id_dec": 314,
+    "id_hex": "0x13A",
+    "name_zh": "提升转差限制RPM",
+    "tips": "电机弱磁后提升的最大转差限制值，范围1~1000RPM",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "1",
+    "max": "1000"
+  },
+  "316": {
+    "id_dec": 316,
+    "id_hex": "0x13C",
+    "name_zh": "额定转差限制RPM",
+    "tips": "电机的额定转差限制值，范围1~1000RPM",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "1",
+    "max": "1000"
+  },
+  "318": {
+    "id_dec": 318,
+    "id_hex": "0x13E",
+    "name_zh": "电机温度传感器",
+    "tips": "Motor Temp Sersor，电机温度传感器0：禁用，1：KTY84-130或KTY84-150",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "1"
+  },
+  "319": {
+    "id_dec": 319,
+    "id_hex": "0x13F",
+    "name_zh": "电机高温 End℃",
+    "tips": "电机过温切断温度，标称值130℃，范围60~170",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "60",
+    "max": "170"
+  },
+  "320": {
+    "id_dec": 320,
+    "id_hex": "0x140",
+    "name_zh": "电机恢复 ℃",
+    "tips": "电机过温恢复温度，标称值110℃，范围60~170",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "60",
+    "max": "170"
+  },
+  "321": {
+    "id_dec": 321,
+    "id_hex": "0x141",
+    "name_zh": "电机高温 Str℃",
+    "tips": "电机温度高温弱化起始温度，标称值100℃，范围0~170",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "170"
+  },
+  "322": {
+    "id_dec": 322,
+    "id_hex": "0x142",
+    "name_zh": "电机高温 %",
+    "tips": "电机温度高温弱化百分比，标称值50%，“电机高温 Str℃”至“电机高温 End℃”的弱化比例，范围0~100",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "100"
+  },
+  "323": {
+    "id_dec": 323,
+    "id_hex": "0x143",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "324": {
+    "id_dec": 324,
+    "id_hex": "0x144",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "325": {
+    "id_dec": 325,
+    "id_hex": "0x145",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "326": {
+    "id_dec": 326,
+    "id_hex": "0x146",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "327": {
+    "id_dec": 327,
+    "id_hex": "0x147",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "328": {
+    "id_dec": 328,
+    "id_hex": "0x148",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "329": {
+    "id_dec": 329,
+    "id_hex": "0x149",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "330": {
+    "id_dec": 330,
+    "id_hex": "0x14A",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "331": {
+    "id_dec": 331,
+    "id_hex": "0x14B",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "332": {
+    "id_dec": 332,
+    "id_hex": "0x14C",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "333": {
+    "id_dec": 333,
+    "id_hex": "0x14D",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "334": {
+    "id_dec": 334,
+    "id_hex": "0x14E",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "335": {
+    "id_dec": 335,
+    "id_hex": "0x14F",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "336": {
+    "id_dec": 336,
+    "id_hex": "0x150",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "337": {
+    "id_dec": 337,
+    "id_hex": "0x151",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "338": {
+    "id_dec": 338,
+    "id_hex": "0x152",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "339": {
+    "id_dec": 339,
+    "id_hex": "0x153",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "340": {
+    "id_dec": 340,
+    "id_hex": "0x154",
+    "name_zh": "交换电机相序",
+    "tips": "交换电机相序，保证电机相序与旋变方向一致，0禁止，1使能，其他为辨识错误状态",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "341": {
+    "id_dec": 341,
+    "id_hex": "0x155",
+    "name_zh": "旋变初始角度",
+    "tips": "旋转变压器初始角度，范围0~65535",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "65535"
+  },
+  "343": {
+    "id_dec": 343,
+    "id_hex": "0x157",
+    "name_zh": "0°  霍尔值",
+    "tips": "电机电角度0°霍尔值，即正转导通相为BC时的霍尔值。",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "7"
+  },
+  "344": {
+    "id_dec": 344,
+    "id_hex": "0x158",
+    "name_zh": "60° 霍尔值",
+    "tips": "电机电角度60°霍尔值，即正转导通相为BA时的霍尔值",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "345": {
+    "id_dec": 345,
+    "id_hex": "0x159",
+    "name_zh": "120°霍尔值",
+    "tips": "电机电角度120°霍尔值，即正转导通相为CA时的霍尔值",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "346": {
+    "id_dec": 346,
+    "id_hex": "0x15A",
+    "name_zh": "180°霍尔值",
+    "tips": "电机电角度180°霍尔值，即正转导通相为CB时的霍尔值",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "347": {
+    "id_dec": 347,
+    "id_hex": "0x15B",
+    "name_zh": "240°霍尔值",
+    "tips": "电机电角度240°霍尔值，即正转导通相为AB时的霍尔值",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "348": {
+    "id_dec": 348,
+    "id_hex": "0x15C",
+    "name_zh": "300°霍尔值",
+    "tips": "电机电角度300°霍尔值，即正转导通相为AC时的霍尔值",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "349": {
+    "id_dec": 349,
+    "id_hex": "0x15D",
+    "name_zh": "前进HA上升沿霍尔",
+    "tips": "前进状态霍尔A上升沿到来时的霍尔值",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "350": {
+    "id_dec": 350,
+    "id_hex": "0x15E",
+    "name_zh": "前进HA下降沿霍尔",
+    "tips": "前进状态霍尔A下降沿到来时的霍尔值",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "351": {
+    "id_dec": 351,
+    "id_hex": "0x15F",
+    "name_zh": "后退HA上升沿霍尔",
+    "tips": "后退状态霍尔A上升沿到来时的霍尔值",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "352": {
+    "id_dec": 352,
+    "id_hex": "0x160",
+    "name_zh": "后退HA下降沿霍尔",
+    "tips": "后退状态霍尔A下降沿到来时的霍尔值",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "353": {
+    "id_dec": 353,
+    "id_hex": "0x161",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "354": {
+    "id_dec": 354,
+    "id_hex": "0x162",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "355": {
+    "id_dec": 355,
+    "id_hex": "0x163",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "356": {
+    "id_dec": 356,
+    "id_hex": "0x164",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "357": {
+    "id_dec": 357,
+    "id_hex": "0x165",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "358": {
+    "id_dec": 358,
+    "id_hex": "0x166",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "359": {
+    "id_dec": 359,
+    "id_hex": "0x167",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "360": {
+    "id_dec": 360,
+    "id_hex": "0x168",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "361": {
+    "id_dec": 361,
+    "id_hex": "0x169",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "362": {
+    "id_dec": 362,
+    "id_hex": "0x16A",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "363": {
+    "id_dec": 363,
+    "id_hex": "0x16B",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "364": {
+    "id_dec": 364,
+    "id_hex": "0x16C",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "365": {
+    "id_dec": 365,
+    "id_hex": "0x16D",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "366": {
+    "id_dec": 366,
+    "id_hex": "0x16E",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "367": {
+    "id_dec": 367,
+    "id_hex": "0x16F",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "368": {
+    "id_dec": 368,
+    "id_hex": "0x170",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "369": {
+    "id_dec": 369,
+    "id_hex": "0x171",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "370": {
+    "id_dec": 370,
+    "id_hex": "0x172",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "371": {
+    "id_dec": 371,
+    "id_hex": "0x173",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "372": {
+    "id_dec": 372,
+    "id_hex": "0x174",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "373": {
+    "id_dec": 373,
+    "id_hex": "0x175",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "374": {
+    "id_dec": 374,
+    "id_hex": "0x176",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "375": {
+    "id_dec": 375,
+    "id_hex": "0x177",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "376": {
+    "id_dec": 376,
+    "id_hex": "0x178",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "377": {
+    "id_dec": 377,
+    "id_hex": "0x179",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "378": {
+    "id_dec": 378,
+    "id_hex": "0x17A",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "379": {
+    "id_dec": 379,
+    "id_hex": "0x17B",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "380": {
+    "id_dec": 380,
+    "id_hex": "0x17C",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "381": {
+    "id_dec": 381,
+    "id_hex": "0x17D",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "382": {
+    "id_dec": 382,
+    "id_hex": "0x17E",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "383": {
+    "id_dec": 383,
+    "id_hex": "0x17F",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "384": {
+    "id_dec": 384,
+    "id_hex": "0x180",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "385": {
+    "id_dec": 385,
+    "id_hex": "0x181",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "386": {
+    "id_dec": 386,
+    "id_hex": "0x182",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "387": {
+    "id_dec": 387,
+    "id_hex": "0x183",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "388": {
+    "id_dec": 388,
+    "id_hex": "0x184",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "389": {
+    "id_dec": 389,
+    "id_hex": "0x185",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "390": {
+    "id_dec": 390,
+    "id_hex": "0x186",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "391": {
+    "id_dec": 391,
+    "id_hex": "0x187",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "392": {
+    "id_dec": 392,
+    "id_hex": "0x188",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "393": {
+    "id_dec": 393,
+    "id_hex": "0x189",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "394": {
+    "id_dec": 394,
+    "id_hex": "0x18A",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "395": {
+    "id_dec": 395,
+    "id_hex": "0x18B",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "396": {
+    "id_dec": 396,
+    "id_hex": "0x18C",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "397": {
+    "id_dec": 397,
+    "id_hex": "0x18D",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "398": {
+    "id_dec": 398,
+    "id_hex": "0x18E",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "399": {
+    "id_dec": 399,
+    "id_hex": "0x18F",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "400": {
+    "id_dec": 400,
+    "id_hex": "0x190",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "401": {
+    "id_dec": 401,
+    "id_hex": "0x191",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "402": {
+    "id_dec": 402,
+    "id_hex": "0x192",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "403": {
+    "id_dec": 403,
+    "id_hex": "0x193",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "404": {
+    "id_dec": 404,
+    "id_hex": "0x194",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "405": {
+    "id_dec": 405,
+    "id_hex": "0x195",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "406": {
+    "id_dec": 406,
+    "id_hex": "0x196",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "407": {
+    "id_dec": 407,
+    "id_hex": "0x197",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "408": {
+    "id_dec": 408,
+    "id_hex": "0x198",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "409": {
+    "id_dec": 409,
+    "id_hex": "0x199",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "410": {
+    "id_dec": 410,
+    "id_hex": "0x19A",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "411": {
+    "id_dec": 411,
+    "id_hex": "0x19B",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "412": {
+    "id_dec": 412,
+    "id_hex": "0x19C",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "413": {
+    "id_dec": 413,
+    "id_hex": "0x19D",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "414": {
+    "id_dec": 414,
+    "id_hex": "0x19E",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "415": {
+    "id_dec": 415,
+    "id_hex": "0x19F",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "416": {
+    "id_dec": 416,
+    "id_hex": "0x1A0",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "417": {
+    "id_dec": 417,
+    "id_hex": "0x1A1",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "418": {
+    "id_dec": 418,
+    "id_hex": "0x1A2",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "419": {
+    "id_dec": 419,
+    "id_hex": "0x1A3",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "420": {
+    "id_dec": 420,
+    "id_hex": "0x1A4",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "421": {
+    "id_dec": 421,
+    "id_hex": "0x1A5",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "422": {
+    "id_dec": 422,
+    "id_hex": "0x1A6",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "423": {
+    "id_dec": 423,
+    "id_hex": "0x1A7",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "424": {
+    "id_dec": 424,
+    "id_hex": "0x1A8",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "425": {
+    "id_dec": 425,
+    "id_hex": "0x1A9",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "426": {
+    "id_dec": 426,
+    "id_hex": "0x1AA",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "427": {
+    "id_dec": 427,
+    "id_hex": "0x1AB",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "428": {
+    "id_dec": 428,
+    "id_hex": "0x1AC",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "429": {
+    "id_dec": 429,
+    "id_hex": "0x1AD",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "430": {
+    "id_dec": 430,
+    "id_hex": "0x1AE",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "431": {
+    "id_dec": 431,
+    "id_hex": "0x1AF",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "432": {
+    "id_dec": 432,
+    "id_hex": "0x1B0",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "433": {
+    "id_dec": 433,
+    "id_hex": "0x1B1",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "434": {
+    "id_dec": 434,
+    "id_hex": "0x1B2",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "435": {
+    "id_dec": 435,
+    "id_hex": "0x1B3",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "436": {
+    "id_dec": 436,
+    "id_hex": "0x1B4",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "437": {
+    "id_dec": 437,
+    "id_hex": "0x1B5",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "438": {
+    "id_dec": 438,
+    "id_hex": "0x1B6",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "439": {
+    "id_dec": 439,
+    "id_hex": "0x1B7",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "440": {
+    "id_dec": 440,
+    "id_hex": "0x1B8",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "441": {
+    "id_dec": 441,
+    "id_hex": "0x1B9",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "442": {
+    "id_dec": 442,
+    "id_hex": "0x1BA",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "443": {
+    "id_dec": 443,
+    "id_hex": "0x1BB",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "444": {
+    "id_dec": 444,
+    "id_hex": "0x1BC",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "445": {
+    "id_dec": 445,
+    "id_hex": "0x1BD",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "446": {
+    "id_dec": 446,
+    "id_hex": "0x1BE",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "447": {
+    "id_dec": 447,
+    "id_hex": "0x1BF",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "448": {
+    "id_dec": 448,
+    "id_hex": "0x1C0",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "449": {
+    "id_dec": 449,
+    "id_hex": "0x1C1",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "450": {
+    "id_dec": 450,
+    "id_hex": "0x1C2",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "451": {
+    "id_dec": 451,
+    "id_hex": "0x1C3",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "452": {
+    "id_dec": 452,
+    "id_hex": "0x1C4",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "453": {
+    "id_dec": 453,
+    "id_hex": "0x1C5",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "454": {
+    "id_dec": 454,
+    "id_hex": "0x1C6",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "455": {
+    "id_dec": 455,
+    "id_hex": "0x1C7",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "456": {
+    "id_dec": 456,
+    "id_hex": "0x1C8",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "457": {
+    "id_dec": 457,
+    "id_hex": "0x1C9",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "458": {
+    "id_dec": 458,
+    "id_hex": "0x1CA",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "459": {
+    "id_dec": 459,
+    "id_hex": "0x1CB",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "460": {
+    "id_dec": 460,
+    "id_hex": "0x1CC",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "461": {
+    "id_dec": 461,
+    "id_hex": "0x1CD",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "462": {
+    "id_dec": 462,
+    "id_hex": "0x1CE",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "463": {
+    "id_dec": 463,
+    "id_hex": "0x1CF",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "464": {
+    "id_dec": 464,
+    "id_hex": "0x1D0",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "465": {
+    "id_dec": 465,
+    "id_hex": "0x1D1",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "466": {
+    "id_dec": 466,
+    "id_hex": "0x1D2",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "467": {
+    "id_dec": 467,
+    "id_hex": "0x1D3",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "468": {
+    "id_dec": 468,
+    "id_hex": "0x1D4",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "469": {
+    "id_dec": 469,
+    "id_hex": "0x1D5",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "470": {
+    "id_dec": 470,
+    "id_hex": "0x1D6",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "471": {
+    "id_dec": 471,
+    "id_hex": "0x1D7",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "472": {
+    "id_dec": 472,
+    "id_hex": "0x1D8",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "473": {
+    "id_dec": 473,
+    "id_hex": "0x1D9",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "474": {
+    "id_dec": 474,
+    "id_hex": "0x1DA",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "475": {
+    "id_dec": 475,
+    "id_hex": "0x1DB",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "476": {
+    "id_dec": 476,
+    "id_hex": "0x1DC",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "477": {
+    "id_dec": 477,
+    "id_hex": "0x1DD",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "478": {
+    "id_dec": 478,
+    "id_hex": "0x1DE",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "479": {
+    "id_dec": 479,
+    "id_hex": "0x1DF",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "480": {
+    "id_dec": 480,
+    "id_hex": "0x1E0",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "481": {
+    "id_dec": 481,
+    "id_hex": "0x1E1",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "482": {
+    "id_dec": 482,
+    "id_hex": "0x1E2",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "483": {
+    "id_dec": 483,
+    "id_hex": "0x1E3",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "484": {
+    "id_dec": 484,
+    "id_hex": "0x1E4",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "485": {
+    "id_dec": 485,
+    "id_hex": "0x1E5",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "486": {
+    "id_dec": 486,
+    "id_hex": "0x1E6",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "487": {
+    "id_dec": 487,
+    "id_hex": "0x1E7",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "488": {
+    "id_dec": 488,
+    "id_hex": "0x1E8",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "489": {
+    "id_dec": 489,
+    "id_hex": "0x1E9",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "490": {
+    "id_dec": 490,
+    "id_hex": "0x1EA",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "491": {
+    "id_dec": 491,
+    "id_hex": "0x1EB",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "492": {
+    "id_dec": 492,
+    "id_hex": "0x1EC",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "493": {
+    "id_dec": 493,
+    "id_hex": "0x1ED",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "494": {
+    "id_dec": 494,
+    "id_hex": "0x1EE",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "495": {
+    "id_dec": 495,
+    "id_hex": "0x1EF",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "496": {
+    "id_dec": 496,
+    "id_hex": "0x1F0",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "497": {
+    "id_dec": 497,
+    "id_hex": "0x1F1",
+    "name_zh": "保留",
+    "tips": "保留",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "498": {
+    "id_dec": 498,
+    "id_hex": "0x1F2",
+    "name_zh": "J 首选地址",
+    "tips": "J1939 Preferred Address，首选地址，范围0~253",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "253"
+  },
+  "499": {
+    "id_dec": 499,
+    "id_hex": "0x1F3",
+    "name_zh": "J 地址仲裁能力域",
+    "tips": "J1939 Arbitrary Address Capable，地址仲裁能力域，范围0~1",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "1"
+  },
+  "500": {
+    "id_dec": 500,
+    "id_hex": "0x1F4",
+    "name_zh": "J 工业组",
+    "tips": "J1939 Industry Group，工业组，范围0~7",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "7"
+  },
+  "501": {
+    "id_dec": 501,
+    "id_hex": "0x1F5",
+    "name_zh": "J 汽车系统实例域",
+    "tips": "J1939 Vehicle System Instance，汽车系统实例域，范围0~15",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "15"
+  },
+  "502": {
+    "id_dec": 502,
+    "id_hex": "0x1F6",
+    "name_zh": "J 汽车系统",
+    "tips": "J1939 Vehicle System，汽车系统，范围0~127",
+    "pro_size": "1",
+    "type": "so",
+    "min": "0",
+    "max": "127"
+  },
+  "503": {
+    "id_dec": 503,
+    "id_hex": "0x1F7",
+    "name_zh": "J 保留域",
+    "tips": "J1939 Reserved Fields，范围0~1",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "1"
+  },
+  "504": {
+    "id_dec": 504,
+    "id_hex": "0x1F8",
+    "name_zh": "J 功能域",
+    "tips": "J1939 Function Fileds，功能域，范围0~255",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "255"
+  },
+  "505": {
+    "id_dec": 505,
+    "id_hex": "0x1F9",
+    "name_zh": "J 功能实例域",
+    "tips": "J1939 Function Instance，功能实例域，范围0~31",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "31"
+  },
+  "506": {
+    "id_dec": 506,
+    "id_hex": "0x1FA",
+    "name_zh": "J ECU实例域",
+    "tips": "J1939 ECU Instance，ECU实例域，范围0~7",
+    "pro_size": "1",
+    "type": "uo",
+    "min": "0",
+    "max": "7"
+  },
+  "507": {
+    "id_dec": 507,
+    "id_hex": "0x1FB",
+    "name_zh": "J 制造商代码域",
+    "tips": "J1939 Function Manufacturer Code Instance，制造商代码域，范围0~2047",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "2047"
+  },
+  "509": {
+    "id_dec": 509,
+    "id_hex": "0x1FD",
+    "name_zh": "J ID编号域",
+    "tips": "J1939 Identity Number，ID编号域，范围0~2097151",
+    "pro_size": "2",
+    "type": "uo",
+    "min": "0",
+    "max": "2097151"
+  }
+}
