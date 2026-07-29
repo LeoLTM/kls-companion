@@ -221,8 +221,8 @@ pub fn spawn_serial_worker(
                 }
             }
 
-            if let Some(ref mut p) = port {
-                if last_poll.elapsed() >= poll_interval {
+            if let Some(ref mut p) = port
+                && last_poll.elapsed() >= poll_interval {
                     last_poll = Instant::now();
                     let mut updated = false;
 
@@ -290,7 +290,6 @@ pub fn spawn_serial_worker(
                         let _ = tx_evt.send(WorkerEvent::Telemetry(telemetry.clone()));
                     }
                 }
-            }
 
             thread::sleep(Duration::from_millis(5));
         }

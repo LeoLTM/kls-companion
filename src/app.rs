@@ -118,7 +118,7 @@ impl KlsApp {
                     while self
                         .voltage_history
                         .front()
-                        .map_or(false, |p| elapsed - p[0] > self.max_history_sec)
+                        .is_some_and(|p| elapsed - p[0] > self.max_history_sec)
                     {
                         self.voltage_history.pop_front();
                         self.current_history.pop_front();
@@ -291,26 +291,22 @@ impl KlsApp {
                     values: self.param_values.clone(),
                     text_values: self.text_values.clone(),
                 };
-                if let Ok(json) = export_profile_to_json(&profile) {
-                    if let Some(path) = rfd::FileDialog::new()
+                if let Ok(json) = export_profile_to_json(&profile)
+                    && let Some(path) = rfd::FileDialog::new()
                         .set_file_name("kls_params.json")
                         .save_file()
                     {
                         let _ = std::fs::write(path, json);
                     }
-                }
             }
 
-            if ui.button("📂 Import JSON").clicked() {
-                if let Some(path) = rfd::FileDialog::new().pick_file() {
-                    if let Ok(content) = std::fs::read_to_string(path) {
-                        if let Ok(profile) = import_profile_from_json(&content) {
+            if ui.button("📂 Import JSON").clicked()
+                && let Some(path) = rfd::FileDialog::new().pick_file()
+                    && let Ok(content) = std::fs::read_to_string(path)
+                        && let Ok(profile) = import_profile_from_json(&content) {
                             self.param_values = profile.values;
                             self.text_values = profile.text_values;
                         }
-                    }
-                }
-            }
         });
 
         ui.add_space(8.0);
@@ -478,8 +474,8 @@ impl KlsApp {
         });
 
         // Safety Modal Dialog
-        if self.show_confirm_modal {
-            if let Some((addr, val, label)) = self.pending_write {
+        if self.show_confirm_modal
+            && let Some((addr, val, label)) = self.pending_write {
                 egui::Window::new("⚠ Confirm Critical Parameter Write")
                     .collapsible(false)
                     .resizable(false)
@@ -504,7 +500,6 @@ impl KlsApp {
                         });
                     });
             }
-        }
     }
 
     fn show_raw_logs(&mut self, ui: &mut egui::Ui) {
