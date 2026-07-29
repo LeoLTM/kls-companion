@@ -222,74 +222,75 @@ pub fn spawn_serial_worker(
             }
 
             if let Some(ref mut p) = port
-                && last_poll.elapsed() >= poll_interval {
-                    last_poll = Instant::now();
-                    let mut updated = false;
+                && last_poll.elapsed() >= poll_interval
+            {
+                last_poll = Instant::now();
+                let mut updated = false;
 
-                    let tx_a = KlsCommand::QueryPacketA.build_frame();
-                    let _ = tx_evt.send(WorkerEvent::RawFrame {
-                        is_tx: true,
-                        data: tx_a,
-                    });
+                let tx_a = KlsCommand::QueryPacketA.build_frame();
+                let _ = tx_evt.send(WorkerEvent::RawFrame {
+                    is_tx: true,
+                    data: tx_a,
+                });
 
-                    match exchange_packet(p, 0x3A) {
-                        Ok(bytes) => {
-                            let _ = tx_evt.send(WorkerEvent::RawFrame {
-                                is_tx: false,
-                                data: bytes.clone(),
-                            });
-                            match parse_packet_a(&bytes) {
-                                Ok(pkt_a) => {
-                                    telemetry.update_from_packet_a(&pkt_a);
-                                    updated = true;
-                                }
-                                Err(err) => {
-                                    let _ = tx_evt.send(WorkerEvent::Error(format!(
-                                        "Packet A parse error: {}",
-                                        err
-                                    )));
-                                }
+                match exchange_packet(p, 0x3A) {
+                    Ok(bytes) => {
+                        let _ = tx_evt.send(WorkerEvent::RawFrame {
+                            is_tx: false,
+                            data: bytes.clone(),
+                        });
+                        match parse_packet_a(&bytes) {
+                            Ok(pkt_a) => {
+                                telemetry.update_from_packet_a(&pkt_a);
+                                updated = true;
+                            }
+                            Err(err) => {
+                                let _ = tx_evt.send(WorkerEvent::Error(format!(
+                                    "Packet A parse error: {}",
+                                    err
+                                )));
                             }
                         }
-                        Err(err) => {
-                            let _ = tx_evt.send(WorkerEvent::Error(err));
-                        }
                     }
-
-                    let tx_b = KlsCommand::QueryPacketB.build_frame();
-                    let _ = tx_evt.send(WorkerEvent::RawFrame {
-                        is_tx: true,
-                        data: tx_b,
-                    });
-
-                    match exchange_packet(p, 0x3B) {
-                        Ok(bytes) => {
-                            let _ = tx_evt.send(WorkerEvent::RawFrame {
-                                is_tx: false,
-                                data: bytes.clone(),
-                            });
-                            match parse_packet_b(&bytes) {
-                                Ok(pkt_b) => {
-                                    telemetry.update_from_packet_b(&pkt_b);
-                                    updated = true;
-                                }
-                                Err(err) => {
-                                    let _ = tx_evt.send(WorkerEvent::Error(format!(
-                                        "Packet B parse error: {}",
-                                        err
-                                    )));
-                                }
-                            }
-                        }
-                        Err(err) => {
-                            let _ = tx_evt.send(WorkerEvent::Error(err));
-                        }
-                    }
-
-                    if updated {
-                        let _ = tx_evt.send(WorkerEvent::Telemetry(telemetry.clone()));
+                    Err(err) => {
+                        let _ = tx_evt.send(WorkerEvent::Error(err));
                     }
                 }
+
+                let tx_b = KlsCommand::QueryPacketB.build_frame();
+                let _ = tx_evt.send(WorkerEvent::RawFrame {
+                    is_tx: true,
+                    data: tx_b,
+                });
+
+                match exchange_packet(p, 0x3B) {
+                    Ok(bytes) => {
+                        let _ = tx_evt.send(WorkerEvent::RawFrame {
+                            is_tx: false,
+                            data: bytes.clone(),
+                        });
+                        match parse_packet_b(&bytes) {
+                            Ok(pkt_b) => {
+                                telemetry.update_from_packet_b(&pkt_b);
+                                updated = true;
+                            }
+                            Err(err) => {
+                                let _ = tx_evt.send(WorkerEvent::Error(format!(
+                                    "Packet B parse error: {}",
+                                    err
+                                )));
+                            }
+                        }
+                    }
+                    Err(err) => {
+                        let _ = tx_evt.send(WorkerEvent::Error(err));
+                    }
+                }
+
+                if updated {
+                    let _ = tx_evt.send(WorkerEvent::Telemetry(telemetry.clone()));
+                }
+            }
 
             thread::sleep(Duration::from_millis(5));
         }

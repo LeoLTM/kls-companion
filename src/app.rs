@@ -295,18 +295,19 @@ impl KlsApp {
                     && let Some(path) = rfd::FileDialog::new()
                         .set_file_name("kls_params.json")
                         .save_file()
-                    {
-                        let _ = std::fs::write(path, json);
-                    }
+                {
+                    let _ = std::fs::write(path, json);
+                }
             }
 
             if ui.button("📂 Import JSON").clicked()
                 && let Some(path) = rfd::FileDialog::new().pick_file()
-                    && let Ok(content) = std::fs::read_to_string(path)
-                        && let Ok(profile) = import_profile_from_json(&content) {
-                            self.param_values = profile.values;
-                            self.text_values = profile.text_values;
-                        }
+                && let Ok(content) = std::fs::read_to_string(path)
+                && let Ok(profile) = import_profile_from_json(&content)
+            {
+                self.param_values = profile.values;
+                self.text_values = profile.text_values;
+            }
         });
 
         ui.add_space(8.0);
@@ -475,31 +476,35 @@ impl KlsApp {
 
         // Safety Modal Dialog
         if self.show_confirm_modal
-            && let Some((addr, val, label)) = self.pending_write {
-                egui::Window::new("⚠ Confirm Critical Parameter Write")
-                    .collapsible(false)
-                    .resizable(false)
-                    .show(ctx, |ui| {
-                        ui.label(format!("You are modifying critical parameter: {}", label));
-                        ui.label(format!("Address: 0x{:02X} -> New Value: {}", addr, val));
-                        ui.colored_label(egui::Color32::RED, "Warning: Incorrect values may cause motor runaway or hardware failure!");
+            && let Some((addr, val, label)) = self.pending_write
+        {
+            egui::Window::new("⚠ Confirm Critical Parameter Write")
+                .collapsible(false)
+                .resizable(false)
+                .show(ctx, |ui| {
+                    ui.label(format!("You are modifying critical parameter: {}", label));
+                    ui.label(format!("Address: 0x{:02X} -> New Value: {}", addr, val));
+                    ui.colored_label(
+                        egui::Color32::RED,
+                        "Warning: Incorrect values may cause motor runaway or hardware failure!",
+                    );
 
-                        ui.horizontal(|ui| {
-                            if ui.button("✔ Confirm Write").clicked() {
-                                let _ = self.tx_cmd.send(WorkerCommand::WriteParam {
-                                    addr,
-                                    value: val as u8,
-                                });
-                                self.show_confirm_modal = false;
-                                self.pending_write = None;
-                            }
-                            if ui.button("❌ Cancel").clicked() {
-                                self.show_confirm_modal = false;
-                                self.pending_write = None;
-                            }
-                        });
+                    ui.horizontal(|ui| {
+                        if ui.button("✔ Confirm Write").clicked() {
+                            let _ = self.tx_cmd.send(WorkerCommand::WriteParam {
+                                addr,
+                                value: val as u8,
+                            });
+                            self.show_confirm_modal = false;
+                            self.pending_write = None;
+                        }
+                        if ui.button("❌ Cancel").clicked() {
+                            self.show_confirm_modal = false;
+                            self.pending_write = None;
+                        }
                     });
-            }
+                });
+        }
     }
 
     fn show_raw_logs(&mut self, ui: &mut egui::Ui) {
