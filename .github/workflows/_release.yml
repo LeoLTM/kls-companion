@@ -1,0 +1,31 @@
+name: Reusable Release
+
+on:
+  workflow_call:
+
+jobs:
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: artifacts
+
+      - name: Archive binaries
+        run: |
+          mkdir -p dist
+          tar -czvf dist/kls-companion-linux-x64.tar.gz -C artifacts/kls-companion-linux-x64 kls-companion
+          (cd artifacts/kls-companion-windows-x64 && zip ../../dist/kls-companion-windows-x64.zip kls-companion.exe)
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: dist/*
+          generate_release_notes: true
