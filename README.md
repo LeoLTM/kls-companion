@@ -62,277 +62,155 @@ Built with Rust, egui, serialport and serde.
 
 ---
 
-## 3. Register Memory Map (459 Registers)
+## 3. Register Memory Map (98 Canonical OEM Parameters)
 
-### Telemetry & System Monitors (0x00 - 0x13)
+The KLS protocol queries parameters using single-byte addresses (`0x00`..`0xFE`) via Read Command `0x1B` and Write Command `0x42`. Below is the complete 98-item catalog matching `src/protocol/oem_params.rs`.
 
-| Address (Dec / Hex) | Parameter Name | Size | Type | Range | Description |
-|---|---|---|---|---|---|
-| `000` (`0x00`) | **Product Model** | 2 byte(s) | `a` | 0..0 | Module Name, Product Model, no range |
-| `001` (`0x01`) | **Brake Pedal** | 1 byte(s) | `uo` | 0..255 | Brake AD value, range 0~255 corresponding to 0~5V |
-| `002` (`0x02`) | **Brake Switch 1** | 1 byte(s) | `uo` | 0..2 | Brake switch 1 status, range 0 or 1 |
-| `003` (`0x03`) | **Safety Switch** | 1 byte(s) | `uo` | 0..2 | Throttle safety switch status, range 0 or 1 |
-| `004` (`0x04`) | **Forward Switch** | 1 byte(s) | `uo` | 0..2 | Forward switch status, range 0 or 1 |
-| `005` (`0x05`) | **Reverse Switch** | 1 byte(s) | `uo` | 0..2 | Reverse switch status, range 0 or 1 |
-| `006` (`0x06`) | **Hall A** | 1 byte(s) | `uo` | 0..2 | Hall A / Encoder A status, range 0 or 1 |
-| `007` (`0x07`) | **Hall B** | 1 byte(s) | `uo` | 0..2 | Hall B / Encoder B status, range 0 or 1 |
-| `008` (`0x08`) | **Customer Code** | 2 byte(s) | `a` | 0..0 | Special Version，Special Version, no range |
-| `009` (`0x09`) | **Battery Voltage** | 1 byte(s) | `uo` | 0..200 | Actual battery voltage, range 0~200V |
-| `010` (`0x0A`) | **Motor Temp** | 1 byte(s) | `uo` | 0..150 | Motor temperature, range 0~150°C |
-| `011` (`0x0B`) | **Internal Temp** | 1 byte(s) | `uo` | 0..150 | Controller temperature, range 0~150°C |
-| `012` (`0x0C`) | **Serial Number** | 2 byte(s) | `h` | 0..0 | Serial Number，Serial Number, no range |
-| `013` (`0x0D`) | **Feedback Direction** | 1 byte(s) | `uo` | 0..2 | Actual running direction: 0 Forward, 1 Reverse |
-| `014` (`0x0E`) | **Brake Switch 2** | 1 byte(s) | `uo` | 0..255 | Brake switch 2 status, range 0 or 1 |
-| `015` (`0x0F`) | **Low Speed Switch** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `016` (`0x10`) | **Software Version** | 2 byte(s) | `h` | 0..0 | Software Version，Software Version, no range |
-| `018` (`0x12`) | **Motor Speed** | 2 byte(s) | `uo` | 0..10000 | Motor speed, range 0~10000 |
+### 🚗 Vehicle Parameters
 
-### Protection & Battery Configuration (0x14 - 0x3F)
+| Address (Hex) | Key | Parameter Label | Type | Bounds | Unit | Access | Description |
+|---|---|---|---|---|---|---|---|
+| `0x00` | `module_name` | **Module Name** | `ReadOnlyText` | `Text / Factory` | - | 🔒 Read-Only | Controller hardware model designation (e.g. KLS7230S). Read-only factory identifier. |
+| `0x08` | `user_name` | **User Name** | `ReadOnlyText` | `Text / Factory` | - | 🔒 Read-Only | Custom factory customer variant code / firmware identifier. |
+| `0x0C` | `serial_number` | **Serial Number** | `ReadOnlyText` | `Text / Factory` | - | 🔒 Read-Only | Unique factory hardware serial number. |
+| `0x10` | `sw_version` | **Software Version** | `ReadOnlyText` | `Text / Factory` | - | 🔒 Read-Only | Controller firmware version number. |
+| `0x17` | `ctrl_volt` | **Controller Volt** | `U16` | `0..144` | V | 🔒 Read-Only | Nominal battery pack voltage rating (e.g. 72V). Read-only hardware specification. |
+| `0x1D` | `hall_galv` | **Hall** | `U16` | `0..1000` | A | 🔒 Read-Only | Internal Hall galvanometer current sensor scale rating in Amperes. |
+| `0x1F` | `phase_curr_max_ad` | **PhaseCurr Max AD** | `U16` | `409..2048` | AD | 🔒 Read-Only | Maximum ADC raw sampling value corresponding to peak phase current. |
+| `0x84` | `brake_sw_level` | **Brake_SW_Level** | `U8` | `0..255` | - | 🔒 Read-Only | Active hardware level configuration for brake switch inputs. |
+| `0x99` | `j_can_address` | **J CAN Address** | `U8` | `0..255` | - | ✏️ Read/Write | J1939 CAN bus node device address (0-255). Default is 127 (or 5 for standard CAN nodes). |
+| `0x19` | `low_volt` | **Low Volt** | `U16` | `18..180` | V | ⚠️ Write (Critical) | Minimum battery voltage cut-off (V). If battery voltage drops below this threshold for 5s, power cutback occurs to protect cells from over-discharge. |
+| `0x1B` | `over_volt` | **Over Volt** | `U16` | `18..180` | V | ⚠️ Write (Critical) | Maximum battery voltage limit (V). Controller shuts down motor drive and disables regen if battery voltage exceeds this threshold to prevent over-charging or MOSFET failure. |
+| `0x25` | `curr_percent` | **Motor_Current%** | `U8` | `20..100` | % | ⚠️ Write (Critical) | Maximum motor phase current limit as a percentage (20-100%) of controller peak current. Directly scales peak acceleration torque. |
+| `0x26` | `battry_limit` | **Battery_Current%** | `U8` | `20..100` | % | ⚠️ Write (Critical) | Maximum battery current limit as a percentage (20-100%) of maximum battery current. Protects battery BMS and limits total DC power draw from battery. |
+| `0x38` | `id_angle` | **Identify Angle** | `U8` | `85..170` | deg | ⚠️ Write (Critical) | Motor auto-identification command status. Set to 170 to initiate self-identification on next power cycle (motor spins automatically to measure Hall angles). Automatically resets to 85 when complete. |
+| `0x5C` | `tps_low_err` | **TPS Low Err** | `U8` | `0..20` | % | ✏️ Read/Write | Throttle lower error threshold (0-20%). Triggers TPS error code if throttle voltage falls below this percentage (20% = 1.0V). |
+| `0x5D` | `tps_high_err` | **TPS High Err** | `U8` | `80..100` | % | ✏️ Read/Write | Throttle upper error threshold (80-100%). Triggers TPS error code if throttle voltage exceeds this percentage (95% = 4.75V) to detect shorted signals. |
+| `0x5F` | `tps_type` | **TPS Type** | `U8` | `1..2` | - | ✏️ Read/Write | Throttle sensor type selection. 1: 0-5K 3-wire potentiometer pedal; 2: 0-5V Hall active pedal/twist-grip. |
+| `0x60` | `tps_dead_low` | **TPS Dead Low** | `U8` | `0..60` | % | ✏️ Read/Write | Throttle start deadzone lower limit (0-60%). Throttle output stays at 0% until pedal is pressed past this percentage (20% = 1.0V). |
+| `0x61` | `tps_dead_high` | **TPS Dead High** | `U8` | `60..95` | % | ✏️ Read/Write | Throttle full-power deadzone upper limit (60-95%). Throttle reaches 100% full output when pedal reaches this percentage (80% = 4.0V). |
+| `0x62` | `tps_fwd_map` | **TPS Fwd MAP** | `U8` | `0..100` | % | ✏️ Read/Write | Forward throttle response curve midpoint (0-100%). Adjusts throttle sensitivity curve shape at 50% pedal position (higher value = punchier initial response). |
+| `0x63` | `tps_rev_map` | **TPS Rev MAP** | `U8` | `0..100` | % | ✏️ Read/Write | Reverse throttle response curve midpoint (0-100%). Adjusts reverse throttle curve shape at 50% pedal position. |
+| `0x64` | `brake_type` | **Brake Type** | `U8` | `0..2` | - | ✏️ Read/Write | Regenerative braking input mode. 0: Switch regen (digital switch input); 1: 0-5K resistance pedal analog regen; 2: 0-5V active Hall pedal analog regen. |
+| `0x65` | `brake_dead_low` | **Brake Dead Low** | `U8` | `5..40` | % | ✏️ Read/Write | Analog brake pedal lower deadzone limit (5-40%). Regen braking starts when pedal exceeds this percentage (20% = 1.0V). |
+| `0x66` | `brake_dead_high` | **Brake Dead High** | `U8` | `60..95` | % | ✏️ Read/Write | Analog brake pedal upper deadzone limit (60-95%). Maximum regen torque is reached when pedal reaches this percentage (80% = 4.0V). |
+| `0x69` | `max_output_fre` | **Max Output Fre** | `U16` | `50..1200` | Hz | ✏️ Read/Write | Maximum electrical fundamental output frequency (50-1200 Hz). Limits maximum achievable motor electrical frequency. |
+| `0x6B` | `max_speed` | **Max Speed** | `U16` | `0..16000` | RPM | ✏️ Read/Write | Motor maximum mechanical speed limit in RPM (0-16000 RPM). Limits top vehicle speed. |
+| `0x6D` | `max_fwd_speed_pct` | **Max Fwd Speed %** | `U8` | `0..100` | % | ✏️ Read/Write | Maximum forward speed limit as a percentage (0-100%) of Motor Max Speed. |
+| `0x6E` | `max_rev_speed_pct` | **Max Rev Speed %** | `U8` | `0..100` | % | ✏️ Read/Write | Maximum reverse speed limit as a percentage (0-100%) of Motor Max Speed. |
+| `0x70` | `midspeed_forw` | **MidSpeed Forw** | `U8` | `0..100` | % | ✏️ Read/Write | Maximum forward speed in middle speed gear (0-100%) when 3-speed switch is enabled. |
+| `0x71` | `midspeed_rev` | **MidSpeed Rev** | `U8` | `0..100` | % | ✏️ Read/Write | Maximum reverse speed in middle speed gear (0-100%) when 3-speed switch is enabled. |
+| `0x72` | `lowspeed_forw` | **LowSpeed Forw** | `U8` | `0..100` | % | ✏️ Read/Write | Maximum forward speed in low speed gear (0-100%) when 3-speed switch is enabled. |
+| `0x73` | `lowspeed_rev` | **LowSpeed Rev** | `U8` | `0..100` | % | ✏️ Read/Write | Maximum reverse speed in low speed gear (0-100%) when 3-speed switch is enabled. |
+| `0x74` | `three_speed` | **Three Speed** | `U8` | `0..2` | - | ✏️ Read/Write | Number of gear speed modes enabled. 0: 1-speed (max speed mode only); 1: 2-speed mode (mid & max); 2: 3-speed mode (low, mid, max). |
+| `0x75` | `pwm_frequency` | **PWM frequency** | `U8` | `10..20` | kHz | ✏️ Read/Write | SVPWM carrier modulation frequency (10, 16, or 20 kHz). 20 kHz provides silent motor operation; lower frequencies reduce MOSFET switching heat. |
 
-| Address (Dec / Hex) | Parameter Name | Size | Type | Range | Description |
-|---|---|---|---|---|---|
-| `020` (`0x14`) | **Startup High Pedal** | 0 byte(s) | `uo` | 0..1 | 0: Disable, 1: Enable. Startup high pedal protection (prevents runaway on boot if throttle engaged) |
-| `021` (`0x15`) | **Throttle Safety Switch** | 0 byte(s) | `uo` | 0..1 | 0: Disable, 1: Enable. Throttle pedal is active when this switch is closed |
-| `022` (`0x16`) | **Startup Delay Time** | 1 byte(s) | `uo` | 0..20 | Startup Time，Startup delay time after power-on, range 0~20 |
-| `023` (`0x17`) | **Controller Voltage** | 2 byte(s) | `uo` | 0..612 | Controller Voltage，Controller voltage, range 0~612 |
-| `024` (`0x18`) | **RC Model Max Value** | 2 byte(s) | `uo` | 0..10000 | RC model remote control max count, range 0~10000 |
-| `025` (`0x19`) | **Undervoltage Value** | 2 byte(s) | `uo` | 0..1000 | Low Voltage Value，Undervoltage error threshold, range 0~1000 |
-| `026` (`0x1A`) | **Reserved** | 2 byte(s) | `uo` | 0..10000 | Reserved, range 0~10000 |
-| `027` (`0x1B`) | **Overvoltage Value** | 2 byte(s) | `uo` | 0..1000 | High Voltage Value，Overvoltage error threshold, range 0~1000 |
-| `028` (`0x1C`) | **Reserved** | 2 byte(s) | `uo` | 0..10000 | Reserved, range 0~10000 |
-| `029` (`0x1D`) | **Hall Current Sensor Rated Value** | 2 byte(s) | `uo` | 0..1000 | Hall current sensor nominal rating, range 0~1000A |
-| `030` (`0x1E`) | **Reserved** | 2 byte(s) | `uo` | 0..10000 | Reserved, range 0~10000 |
-| `031` (`0x1F`) | **Phase Max Current AD** | 2 byte(s) | `uo` | 409..2048 | AD value corresponding to rated current of Hall current sensor. Do not modify unless ADC resolution changes. Range 409 (10-bit)~2048 (12-bit) |
-| `032` (`0x20`) | **Reserved** | 2 byte(s) | `uo` | 0..10000 | Reserved, range 0~10000 |
-| `033` (`0x21`) | **Phase A Zero Current AD** | 2 byte(s) | `uo` | 474..2200 | Phase A Zero current, range 474 (10-bit)~2200 (12-bit) |
-| `034` (`0x22`) | **Reserved** | 2 byte(s) | `uo` | 0..10000 | Reserved, range 0~10000 |
-| `035` (`0x23`) | **Phase B Zero Current AD** | 2 byte(s) | `uo` | 474..2200 | Phase B Zero current, range 474 (10-bit)~2200 (12-bit) |
-| `036` (`0x24`) | **Reserved** | 2 byte(s) | `uo` | 0..10000 | Reserved, range 0~10000 |
-| `037` (`0x25`) | **Phase Current Percent** | 1 byte(s) | `uo` | 20..100 | Current Percent, range 20~100 |
-| `038` (`0x26`) | **Battery Current Limit** | 1 byte(s) | `uo` | 20..100 | Battry Current Limit，Limits maximum battery current, range 20~100 |
-| `039` (`0x27`) | **Battery Current Limit Derating** | 1 byte(s) | `uo` | 20..100 | Battry Current Limit Weaking，Derating starts at Low Voltage Cutoff * 1.15; calibrated value is remaining percentage after derating. Range 20~100 |
-| `040` (`0x28`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `041` (`0x29`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `042` (`0x2A`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `043` (`0x2B`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `044` (`0x2C`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `045` (`0x2D`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `046` (`0x2E`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `047` (`0x2F`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `048` (`0x30`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `049` (`0x31`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `050` (`0x32`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `051` (`0x33`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `052` (`0x34`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `053` (`0x35`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `054` (`0x36`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `055` (`0x37`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `056` (`0x38`) | **Motor Parameter Identification Enable** | 1 byte(s) | `uo` | 0..255 | Identify Motor Parameters Enable Flag，0x55 = Exit, 0xAA = Enter |
-| `057` (`0x39`) | **PCB Cutoff Temp (°C)** | 1 byte(s) | `uo` | 0..255 | PCB cutoff temperature, nominal 110°C, cuts off on overtemp, range 0~255 |
-| `058` (`0x3A`) | **PCB Recovery Temp (°C)** | 1 byte(s) | `uo` | 0..255 | PCB overtemp recovery temperature, nominal 90°C, range 0~255 |
-| `059` (`0x3B`) | **PCB Overtemp Start (°C)** | 1 byte(s) | `uo` | 0..255 | PCB overtemp derating start temperature, nominal 100°C, range 0~255 |
-| `060` (`0x3C`) | **PCB Overtemp Derating (%)** | 1 byte(s) | `uo` | 0..100 | PCB overtemp derating percentage, nominal 50%. Derating ratio from PCB Overtemp Start (°C) to PCB Cutoff Temp (°C), range 0~100 |
-| `061` (`0x3D`) | **PCB Low Temp End (°C)** | 1 byte(s) | `uo` | 0..255 | PCB low temp derating end temperature, nominal 50°C. No derating between this and Mid Temp Start, range 0~255 |
-| `062` (`0x3E`) | **PCB Mid Temp Derating (%)** | 1 byte(s) | `uo` | 0..100 | PCB mid temp derating percentage, nominal 35%. Derating ratio from PCB Mid Temp Start (°C) to PCB Overtemp Start (°C), range 0~100 |
-| `063` (`0x3F`) | **PCB Low Temp Start (°C)** | 1 byte(s) | `uo` | 0..255 | PCB low temp derating start temperature, nominal 0°C, range 0~255 |
+### ⚡ Motor Parameters
 
-### Speed Limits, Ramps & Braking (0x40 - 0x7F)
+| Address (Hex) | Key | Parameter Label | Type | Bounds | Unit | Access | Description |
+|---|---|---|---|---|---|---|---|
+| `0x20` | `motor_nom_curr` | **Motor Nominal** | `U16` | `0..1000` | A | ⚠️ Write (Critical) | Motor nominal current setting during auto-identification (0-1000 A). Set to match motor rated current for proper parameter identification. |
+| `0x40` | `motor_poles` | **Motor Poles** | `U8` | `2..128` | - | ⚠️ Write (Critical) | Number of motor magnetic poles (2-128 = 2x pole pairs). Crucial for accurate RPM calculation and electrical commutation. |
+| `0x41` | `speed_sensor_type` | **Speed Sensor** | `U8` | `2..3` | - | ✏️ Read/Write | Primary motor position sensor type. 2: 3-phase Hall effect sensors; 3: Magnetic encoder / resolver. |
+| `0x42` | `resolver_poles` | **Resolver Poles** | `U8` | `2..32` | - | ✏️ Read/Write | Number of poles for resolver sensor (2-32). Reserved for resolver equipped motors. |
+| `0x43` | `min_excitation` | **Min Excitation** | `U16` | `0..100` | - | ✏️ Read/Write | Minimum excitation current coefficient (0-100 A) for field weakening. If 0, field weakening speed boost is inactive. |
+| `0x44` | `motor_temp_sensor` | **Motor Temp** | `U8` | `0..2` | - | ✏️ Read/Write | Motor temperature thermistor type. 0: Disabled / None; 1: KTY84-130 / KTY84-150; 2: KTY83-122. |
+| `0x46` | `high_temp_cutoff` | **High Temp Cut ℃** | `U8` | `60..170` | °C | ✏️ Read/Write | Motor over-temperature shutdown threshold (60-170 °C). Controller stops driving if motor temperature exceeds this value. |
+| `0x47` | `high_temp_striae` | **High Temp Str℃** | `U8` | `0..170` | °C | ✏️ Read/Write | Motor high-temperature current foldback start threshold (0-170 °C). Drive current begins ramping down above this temp. |
+| `0x48` | `high_temp_week_pct` | **High Temp Week %** | `U8` | `0..100` | % | ✏️ Read/Write | Motor high-temperature foldback strength percentage (0-100%). Defines current reduction percentage between start and cutoff temp. |
+| `0x49` | `resume_off` | **Resume ℃** | `U8` | `60..170` | °C | ✏️ Read/Write | Motor over-temperature recovery threshold (60-170 °C). Controller resumes operation once motor cools down to this temp. |
+| `0x4D` | `line_hall_zero` | **Line Hall Zero** | `U16` | `1..1023` | - | ✏️ Read/Write | Sine/Cosine sensor zero-point voltage calibration value (1-1023). Formula: Zero V = Value / 1024 * 5V. |
+| `0x4E` | `line_hall_amp` | **Line Hall** | `U16` | `1..1024` | - | ✏️ Read/Write | Sine/Cosine sensor signal amplitude calibration value (1-1024). Valid range 153.6 to 256 for normal signal voltage. |
+| `0x4F` | `line_hall_high_err` | **Line Hall High** | `U16` | `1..1023` | - | ✏️ Read/Write | Sine/Cosine sensor high-amplitude error threshold limit (1-1023). Triggers angle sensor fault if amplitude exceeds this. |
+| `0x50` | `line_hall_low_err` | **Line Hall Low** | `U16` | `1..1023` | - | ✏️ Read/Write | Sine/Cosine sensor low-amplitude error threshold limit (1-1023). Triggers angle sensor fault if amplitude drops below this. |
+| `0x51` | `swap_motor_phase` | **Swap Motor Phase** | `U8` | `0..255` | - | 🔒 Read-Only | Motor phase swapping status flag for sine/cosine sensor alignment. 0: Disabled; 1: Enabled; 255: Identification error. |
+| `0x52` | `resolver_init_angle` | **Resolver init** | `U16` | `0..65535` | deg | 🔒 Read-Only | Synchro initial angle reference point (0-65535) for sine/cosine or magnetic encoder position alignment. |
+| `0x06` | `hall_0deg` | **0° Hall value** | `U8` | `0..7` | - | 🔒 Read-Only | Hall sensor sequence value at 0° electrical angle. Auto-generated during self-identification. |
+| `0x07` | `hall_60deg` | **60° Hall value** | `U8` | `0..7` | - | 🔒 Read-Only | Hall sensor sequence value at 60° electrical angle. Auto-generated during self-identification. |
+| `0x0A` | `hall_120deg` | **120° Hall value** | `U8` | `0..7` | - | 🔒 Read-Only | Hall sensor sequence value at 120° electrical angle. Auto-generated during self-identification. |
+| `0x0B` | `hall_180deg` | **180° Hall value** | `U8` | `0..7` | - | 🔒 Read-Only | Hall sensor sequence value at 180° electrical angle. Auto-generated during self-identification. |
+| `0x0E` | `hall_240deg` | **240° Hall value** | `U8` | `0..7` | - | 🔒 Read-Only | Hall sensor sequence value at 240° electrical angle. Auto-generated during self-identification. |
+| `0x0F` | `hall_300deg` | **300° Hall value** | `U8` | `0..7` | - | 🔒 Read-Only | Hall sensor sequence value at 300° electrical angle. Auto-generated during self-identification. |
+| `0x53` | `fwd_ha_rising` | **Forward HA (Rising)** | `U8` | `0..7` | - | 🔒 Read-Only | Forward direction Hall-A rising edge sequence value. Auto-generated during self-identification. |
+| `0x54` | `fwd_ha_falling` | **Forward HA (Falling)** | `U8` | `0..7` | - | 🔒 Read-Only | Forward direction Hall-A falling edge sequence value. Auto-generated during self-identification. |
+| `0x55` | `rev_ha_rising` | **Reverse HA (Rising)** | `U8` | `0..7` | - | 🔒 Read-Only | Reverse direction Hall-A rising edge sequence value. Auto-generated during self-identification. |
+| `0x57` | `rev_ha_falling` | **Reverse HA (Falling)** | `U8` | `0..7` | - | 🔒 Read-Only | Reverse direction Hall-A falling edge sequence value. Auto-generated during self-identification. |
 
-| Address (Dec / Hex) | Parameter Name | Size | Type | Range | Description |
-|---|---|---|---|---|---|
-| `064` (`0x40`) | **PCB Low Temp Derating (%)** | 1 byte(s) | `uo` | 0..100 | PCB low temp derating percentage, nominal 30%. Derating ratio from PCB Low Temp End (°C) to PCB Low Temp Start (°C), range 0~100 |
-| `065` (`0x41`) | **PCB Sub-Zero End (°C)** | 1 byte(s) | `so` | 0..255 | PCB sub-zero temp derating end temperature, nominal 216 (-40°C), range 0~255 |
-| `066` (`0x42`) | **PCB Sub-Zero Derating (%)** | 1 byte(s) | `uo` | 0..100 | PCB sub-zero temp derating percentage, nominal 40%. Derating ratio from PCB Low Temp Start (°C) to PCB Sub-Zero End (°C), range 0~100 |
-| `067` (`0x43`) | **PCB Reference Temp (°C)** | 1 byte(s) | `uo` | 0..255 | PCB reference temperature, nominal 0°C, range 0~255 |
-| `068` (`0x44`) | **PCB Mid Temp Start (°C)** | 1 byte(s) | `uo` | 0..255 | PCB mid temp derating start temperature, nominal 80°C, range 0~255 |
-| `069` (`0x45`) | **HL Reference Temp (°C)** | 1 byte(s) | `uo` | 0..255 | HL reference temperature, nominal 50°C, range 0~255 |
-| `070` (`0x46`) | **HL Overtemp End (°C)** | 1 byte(s) | `uo` | 0..255 | HL overtemp cutoff temperature, nominal 120°C, range 0~255 |
-| `071` (`0x47`) | **HL Overtemp Start (°C)** | 1 byte(s) | `uo` | 0..255 | HL overtemp derating start temperature, nominal 90°C, range 0~255 |
-| `072` (`0x48`) | **HL Overtemp Derating (%)** | 1 byte(s) | `uo` | 0..100 | HL overtemp derating percentage, nominal 70%. Derating ratio from HL Overtemp Start (°C) to HL Overtemp End (°C), range 0~100 |
-| `073` (`0x49`) | **HL Recovery Temp (°C)** | 1 byte(s) | `uo` | 0..255 | HL overtemp recovery temperature, nominal 110°C, range 0~255 |
-| `074` (`0x4A`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `075` (`0x4B`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `076` (`0x4C`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `077` (`0x4D`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `078` (`0x4E`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `079` (`0x4F`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `080` (`0x50`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `081` (`0x51`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `082` (`0x52`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `083` (`0x53`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `084` (`0x54`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `085` (`0x55`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `086` (`0x56`) | **Bootloader Mode** | 1 byte(s) | `uo` | 0..255 | Bootloader Mode，Bootloader mode, 0xFF = Enabled, others = Disabled |
-| `087` (`0x57`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `088` (`0x58`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `089` (`0x59`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `090` (`0x5A`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `091` (`0x5B`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `092` (`0x5C`) | **Throttle Low Error Point** | 1 byte(s) | `uo` | 0..20 | Reports throttle type error if below calibrated value, range 0~20% |
-| `093` (`0x5D`) | **Throttle High Error Point** | 1 byte(s) | `uo` | 80..100 | Reports throttle type error if above calibrated value, range 80~100% |
-| `094` (`0x5E`) | **Throttle Ramp Rate** | 1 byte(s) | `uo` | 10..100 | Acc Speed，Throttle response rate, smaller value = faster response, range 10~100 |
-| `095` (`0x5F`) | **Throttle Type** | 1 byte(s) | `uo` | 0..3 | TPS Type, Throttle type, range 0: None, 1: 0-5V, 2: 1-4V, 3: 0-5K |
-| `096` (`0x60`) | **Throttle Low Deadband** | 1 byte(s) | `uo` | 0..80 | Throttle low deadband, range 0~40 corresponding to 0%~40% |
-| `097` (`0x61`) | **Throttle High Deadband** | 1 byte(s) | `uo` | 120..200 | Throttle high deadband, range 60~100 corresponding to 60%~100% |
-| `098` (`0x62`) | **Throttle Forward MAP** | 1 byte(s) | `uo` | 0..100 | Throttle forward MAP, range 0~100. Defines % of max throttle at 50% pedal position (curvature) |
-| `099` (`0x63`) | **Throttle Reverse MAP** | 1 byte(s) | `uo` | 0..100 | Throttle reverse MAP, range 0~100. Defines % of max reverse throttle at 50% pedal position (curvature) |
-| `100` (`0x64`) | **Brake Type** | 1 byte(s) | `uo` | 0..3 | BRAKE Type, Brake type, range 0: None, 1: 0-5V, 2: 1-4V, 3: 0-5K |
-| `101` (`0x65`) | **Brake Low Deadband** | 1 byte(s) | `uo` | 0..80 | Brake low deadband, range 0~40 corresponding to 0%~40% |
-| `102` (`0x66`) | **Brake High Deadband** | 1 byte(s) | `uo` | 120..200 | Brake high deadband, range 60~100 corresponding to 60%~100% |
-| `103` (`0x67`) | **Brake MAP** | 1 byte(s) | `uo` | 0..100 | Brake MAP, range 0~100. Defines % of max brake at 50% pedal position (curvature) |
-| `104` (`0x68`) | **Control Mode** | 1 byte(s) | `uo` | 0..2 | Control Mode，0:OpenLoop, 1:Speed CloseLoop,2:Torque CloseLoop |
-| `105` (`0x69`) | **Max Output Frequency** | 2 byte(s) | `uo` | 0..300 | Max Output Frequency，Max output frequency, range 0~300Hz |
-| `107` (`0x6B`) | **Max Speed** | 2 byte(s) | `uo` | 0..60000 | Max speed，Max motor speed, range 0~60000 RPM |
-| `109` (`0x6D`) | **Max Forward Speed %** | 1 byte(s) | `uo` | 30..100 | Forward Speed Limit, range 30~100 |
-| `110` (`0x6E`) | **Max Reverse Speed %** | 1 byte(s) | `uo` | 20..100 | Reverse Speed Limit, range 20~100 |
-| `111` (`0x6F`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `112` (`0x70`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `113` (`0x71`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `114` (`0x72`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `115` (`0x73`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `116` (`0x74`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `117` (`0x75`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `118` (`0x76`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `119` (`0x77`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `120` (`0x78`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `121` (`0x79`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `122` (`0x7A`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `123` (`0x7B`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `124` (`0x7C`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `125` (`0x7D`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `126` (`0x7E`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `127` (`0x7F`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
+### 🎛 Control Parameters
 
-### FOC Motor Calibration & PID Loops (0x80 - 0xAF)
+| Address (Hex) | Key | Parameter Label | Type | Bounds | Unit | Access | Description |
+|---|---|---|---|---|---|---|---|
+| `0x80` | `iq_kp` | **IQ Kp** | `U16` | `0..32767` | - | ✏️ Read/Write | Proportional gain (Kp) for Q-axis (torque) current loop at low speed (<400 RPM). Higher values speed up torque response but may cause startup vibration. |
+| `0x82` | `iq_ki` | **IQ Ki** | `U16` | `0..32767` | - | ✏️ Read/Write | Integral gain (Ki) for Q-axis (torque) current loop at low speed (<400 RPM). Improves steady-state current accuracy. |
+| `0x86` | `id_kp` | **ID Kp** | `U16` | `0..32767` | - | ✏️ Read/Write | Proportional gain (Kp) for D-axis (flux) current loop at low speed (<400 RPM). Controls field weakening and d-axis current response. |
+| `0x88` | `id_ki` | **ID Ki** | `U16` | `0..32767` | - | ✏️ Read/Write | Integral gain (Ki) for D-axis (flux) current loop at low speed (<400 RPM). Enhances flux control stability. |
+| `0x96` | `ms_acqr_kp` | **MS_ACQR_Kp** | `U16` | `0..32767` | - | ✏️ Read/Write | Proportional gain (Kp) for Q-axis current loop at medium/high speed (>400 RPM). Accelerates high-speed acceleration response. |
+| `0x98` | `ms_acqr_ki` | **MS_ACQR_Ki** | `U16` | `0..32767` | - | ✏️ Read/Write | Integral gain (Ki) for Q-axis current loop at medium/high speed (>400 RPM). Maintains torque precision at higher RPM. |
+| `0x9A` | `ms_acdr_kp` | **MS_ACDR_Kp** | `U16` | `0..32767` | - | ✏️ Read/Write | Proportional gain (Kp) for D-axis current loop at medium/high speed (>400 RPM). Optimizes high-speed field weakening response. |
+| `0x9C` | `ms_acdr_ki` | **MS_ACDR_Ki** | `U16` | `0..32767` | - | ✏️ Read/Write | Integral gain (Ki) for D-axis current loop at medium/high speed (>400 RPM). Ensures stability during high-speed field weakening. |
+| `0x9D` | `brk_ad_brk_pct` | **BRK_AD Brk %** | `U8` | `0..50` | % | ✏️ Read/Write | Analog brake pedal regen strength (0-50%). Sets maximum braking torque percentage when using analog brake pedal regen. |
+| `0x9E` | `anti_theft_pct` | **Anti-theft %** | `U8` | `0..30` | % | ✏️ Read/Write | Anti-theft locking torque strength (0-30%). Percentage of maximum current used to lock motor rotor when alarm is triggered. |
+| `0x9F` | `brk_speed_limit` | **Brk_Speed Limit** | `U16` | `0..500` | RPM | ✏️ Read/Write | Minimum motor speed threshold (0-500 RPM) to activate regen braking. Regen automatically disengages below this RPM. |
+| `0xA0` | `rls_tps_brk_pct` | **RLS_TPS Brk %** | `U8` | `0..50` | % | ✏️ Read/Write | Throttle release (off-throttle / overrun) regen braking strength (0-50%). Provides engine-braking effect when releasing throttle. |
+| `0xA1` | `ntl_brk_pct` | **NTL Brk %** | `U8` | `0..50` | % | ✏️ Read/Write | Neutral gear regen braking strength (0-50%). Sets braking torque percentage when vehicle is rolling in neutral. |
+| `0xA2` | `accel_time` | **Accel Time** | `U8` | `1..250` | x0.1s | ✏️ Read/Write | Drive torque ramp-up time (1-250 = 0.1s to 25.0s). Time taken for torque to rise from 0 to maximum. Lower value = faster throttle acceleration. |
+| `0xA3` | `accel_rls_time` | **Accel Rls Time** | `U8` | `1..250` | x0.1s | ✏️ Read/Write | Drive torque release delay time (1-250 = 0.1s to 25.0s). Time taken for drive torque to ramp down from maximum to 0 upon releasing throttle. |
+| `0xA4` | `brake_time` | **Brake Time** | `U8` | `1..250` | x0.1s | ✏️ Read/Write | Braking torque ramp-up time (1-250 = 0.1s to 25.0s). Time taken for regen braking torque to ramp up from 0 to maximum. Provides smooth braking onset. |
+| `0xA5` | `brake_rls_time` | **Brake Rls Time** | `U8` | `1..250` | x0.1s | ✏️ Read/Write | Braking torque release delay time (1-250 = 0.1s to 25.0s). Time taken for regen braking torque to decay from maximum to 0. |
+| `0xA6` | `brk_sw_brk_pct` | **BRK_SW Brk %** | `U8` | `0..50` | % | ✏️ Read/Write | Digital brake switch regen braking strength (0-50%). Braking torque percentage when brake switch input is activated. |
+| `0xA7` | `change_dir_brk_pct` | **Change Dir Brk%** | `U8` | `0..50` | % | ✏️ Read/Write | Direction change (plugging) regen braking strength (0-50%). Braking torque applied when switching FWD/REV while moving. |
+| `0xA8` | `compensation` | **Compensation** | `U8` | `0..100` | % | ✏️ Read/Write | Hill-hold / anti-slip compensation torque percentage (0-100%). Provides hold torque to prevent rolling backward on inclines. |
+| `0xA9` | `ivt_brk_max` | **IVT BRK Max** | `U16` | `0..10000` | RPM | ✏️ Read/Write | Maximum motor RPM limit (0-10000 RPM) allowing direction change plugging regen braking. |
+| `0xAA` | `ivt_brk_min` | **IVT BRK Min** | `U16` | `0..5000` | RPM | ✏️ Read/Write | Minimum motor RPM limit (0-5000 RPM) required to engage direction change plugging regen braking. |
+| `0xFA` | `torque_speed_kp` | **Torque Speed Kp** | `U16` | `0..10000` | - | ✏️ Read/Write | Proportional gain (Kp) for Q-axis loop in Torque Mode at low speed (<400 RPM). Tunes startup responsiveness. |
+| `0xFC` | `torque_speed_ki` | **Torque Speed Ki** | `U16` | `0..500` | - | ✏️ Read/Write | Integral gain (Ki) for Q-axis loop in Torque Mode at low speed (<400 RPM). Tunes steady-state torque accuracy. |
+| `0xFE` | `speed_err_limit` | **Speed Err Limit** | `U16` | `50..4000` | - | ✏️ Read/Write | Speed loop error signal limit (50-4000) for torque mode control loops. |
 
-| Address (Dec / Hex) | Parameter Name | Size | Type | Range | Description |
-|---|---|---|---|---|---|
-| `128` (`0x80`) | **Q-Axis Current Loop Kp** | 2 byte(s) | `uo` | 0..32767 | Q-axis current loop proportional gain Kp, range 0~32767 corresponding to 0~3.9999 |
-| `130` (`0x82`) | **Q-Axis Current Loop Ki** | 2 byte(s) | `uo` | 0..32767 | Q-axis current loop integral gain Ki, range 0~32767 corresponding to 0~3.9999 |
-| `132` (`0x84`) | **Q-Axis Current Loop Limit** | 2 byte(s) | `uo` | 32767..56756 | Q-axis current loop output limit, range 32767~56756 corresponding to 0.9999~1.732 |
-| `134` (`0x86`) | **D-Axis Current Loop Kp** | 2 byte(s) | `uo` | 0..32767 | D-axis current loop proportional gain Kp, range 0~32767 corresponding to 0~3.9999 |
-| `136` (`0x88`) | **D-Axis Current Loop Ki** | 2 byte(s) | `uo` | 0..32767 | D-axis current loop integral gain Ki, range 0~32767 corresponding to 0~3.9999 |
-| `138` (`0x8A`) | **D-Axis Current Loop Limit** | 2 byte(s) | `uo` | 23170..32767 | D-axis current loop output limit, range 23170~32767 corresponding to 0.707~0.9999 |
-| `140` (`0x8C`) | **Voltage Loop Kp** | 2 byte(s) | `uo` | 0..32767 | Voltage loop proportional gain Kp, range 0~32767 corresponding to 0~3.9999 |
-| `142` (`0x8E`) | **Voltage Loop Ki** | 2 byte(s) | `uo` | 0..32767 | Voltage loop integral gain Ki, range 0~32767 corresponding to 0~3.9999 |
-| `144` (`0x90`) | **Voltage Loop Error Limit** | 2 byte(s) | `uo` | 50..4095 | Voltage loop error signal limit, range 50~4095 |
-| `146` (`0x92`) | **Switch Point RPM Upper Limit** | 2 byte(s) | `uo` | 0..65535 | Motor RPM threshold when switching from square wave to sine wave mode with Hall sensor, range 0~65535 RPM |
-| `147` (`0x93`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `148` (`0x94`) | **Switch Point RPM Lower Limit** | 2 byte(s) | `uo` | 0..65535 | Motor RPM threshold when switching from sine wave to square wave mode with Hall sensor, range 0~65535 RPM |
-| `149` (`0x95`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `150` (`0x96`) | **Iq Compensation Loop Kp** | 2 byte(s) | `uo` | 0..32767 | Torque current Iq compensation loop Kp, range 0~32767 corresponding to 0~3.9999 |
-| `151` (`0x97`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `152` (`0x98`) | **Iq Compensation Loop Ki** | 2 byte(s) | `uo` | 0..32767 | Torque current Iq compensation loop Ki, range 0~32767 corresponding to 0~3.9999 |
-| `153` (`0x99`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `154` (`0x9A`) | **Iq Compensation Loop Error Limit** | 2 byte(s) | `uo` | 50..4095 | Torque current Iq compensation loop error limit, range 50~4095 |
-| `155` (`0x9B`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `156` (`0x9C`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `157` (`0x9D`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `158` (`0x9E`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `159` (`0x9F`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `160` (`0xA0`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `161` (`0xA1`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `162` (`0xA2`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `163` (`0xA3`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `164` (`0xA4`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `165` (`0xA5`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `166` (`0xA6`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `167` (`0xA7`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `168` (`0xA8`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `169` (`0xA9`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `170` (`0xAA`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `171` (`0xAB`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `172` (`0xAC`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `173` (`0xAD`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `174` (`0xAE`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
-| `175` (`0xAF`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved, range 0~255 |
+### ☑ Feature Flags & Checkboxes
 
-### Advanced & CAN Bus / J1939 Settings (0x1B0 - 0x1FD)
-
-| Address (Dec / Hex) | Parameter Name | Size | Type | Range | Description |
-|---|---|---|---|---|---|
-| `432` (`0x1B0`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `433` (`0x1B1`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `434` (`0x1B2`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `435` (`0x1B3`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `436` (`0x1B4`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `437` (`0x1B5`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `438` (`0x1B6`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `439` (`0x1B7`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `440` (`0x1B8`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `441` (`0x1B9`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `442` (`0x1BA`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `443` (`0x1BB`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `444` (`0x1BC`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `445` (`0x1BD`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `446` (`0x1BE`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `447` (`0x1BF`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `448` (`0x1C0`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `449` (`0x1C1`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `450` (`0x1C2`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `451` (`0x1C3`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `452` (`0x1C4`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `453` (`0x1C5`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `454` (`0x1C6`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `455` (`0x1C7`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `456` (`0x1C8`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `457` (`0x1C9`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `458` (`0x1CA`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `459` (`0x1CB`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `460` (`0x1CC`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `461` (`0x1CD`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `462` (`0x1CE`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `463` (`0x1CF`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `464` (`0x1D0`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `465` (`0x1D1`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `466` (`0x1D2`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `467` (`0x1D3`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `468` (`0x1D4`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `469` (`0x1D5`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `470` (`0x1D6`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `471` (`0x1D7`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `472` (`0x1D8`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `473` (`0x1D9`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `474` (`0x1DA`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `475` (`0x1DB`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `476` (`0x1DC`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `477` (`0x1DD`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `478` (`0x1DE`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `479` (`0x1DF`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `480` (`0x1E0`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `481` (`0x1E1`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `482` (`0x1E2`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `483` (`0x1E3`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `484` (`0x1E4`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `485` (`0x1E5`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `486` (`0x1E6`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `487` (`0x1E7`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `488` (`0x1E8`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `489` (`0x1E9`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `490` (`0x1EA`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `491` (`0x1EB`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `492` (`0x1EC`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `493` (`0x1ED`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `494` (`0x1EE`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `495` (`0x1EF`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `496` (`0x1F0`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `497` (`0x1F1`) | **Reserved** | 1 byte(s) | `uo` | 0..255 | Reserved |
-| `498` (`0x1F2`) | **J1939 Preferred Address** | 1 byte(s) | `uo` | 0..253 | J1939 Preferred Address, preferred address, range 0~253 |
-| `499` (`0x1F3`) | **J1939 Arbitrary Address Capable** | 1 byte(s) | `uo` | 0..1 | J1939 Arbitrary Address Capable, arbitrary address capable field, range 0~1 |
-| `500` (`0x1F4`) | **J1939 Industry Group** | 1 byte(s) | `uo` | 0..7 | J1939 Industry Group, industry group, range 0~7 |
-| `501` (`0x1F5`) | **J1939 Vehicle System Instance** | 1 byte(s) | `uo` | 0..15 | J1939 Vehicle System Instance, vehicle system instance field, range 0~15 |
-| `502` (`0x1F6`) | **J1939 Vehicle System** | 1 byte(s) | `so` | 0..127 | J1939 Vehicle System, vehicle system field, range 0~127 |
-| `503` (`0x1F7`) | **J1939 Reserved Fields** | 1 byte(s) | `uo` | 0..1 | J1939 Reserved Fields, range 0~1 |
-| `504` (`0x1F8`) | **J1939 Function Fields** | 1 byte(s) | `uo` | 0..255 | J1939 Function Fields, function fields, range 0~255 |
-| `505` (`0x1F9`) | **J1939 Function Instance** | 1 byte(s) | `uo` | 0..31 | J1939 Function Instance, function instance field, range 0~31 |
-| `506` (`0x1FA`) | **J1939 ECU Instance** | 1 byte(s) | `uo` | 0..7 | J1939 ECU Instance, ECU instance field, range 0~7 |
-| `507` (`0x1FB`) | **J1939 Manufacturer Code** | 2 byte(s) | `uo` | 0..2047 | J1939 Manufacturer Code Instance, manufacturer code field, range 0~2047 |
-| `509` (`0x1FD`) | **J1939 Identity Number** | 2 byte(s) | `uo` | 0..2097151 | J1939 Identity Number, identity number field, range 0~2097151 |
-
+| Address (Hex) | Key | Parameter Label | Type | Bounds | Unit | Access | Description |
+|---|---|---|---|---|---|---|---|
+| `0x14` | `startup_h_pedal` | **Startup H-Pedal** | `Bool` | `0 or 1` | - | ✏️ Read/Write | High-Pedal Protection on Startup (HPD). When enabled, prevents accidental runaway if throttle is pressed when powering on controller. |
+| `0x21` | `brake_h_pedal` | **Brake H-Pedal** | `Bool` | `0 or 1` | - | ✏️ Read/Write | Brake High-Pedal Protection. When enabled, reports a high-pedal fault and cuts motor output if throttle and brake are pressed simultaneously. |
+| `0x22` | `ntl_h_pedal` | **NTL H-Pedal** | `Bool` | `0 or 1` | - | ✏️ Read/Write | Neutral High-Pedal Protection. When enabled, prevents accidental starting if throttle is pressed while shifting gears out of neutral. |
+| `0x23` | `joystick` | **Joystick** | `Bool` | `0 or 1` | - | ✏️ Read/Write | Joystick Throttle Mode. Enables bi-directional 0-5V joystick (0-2.5V = Reverse, 2.5V = Neutral, 2.5V-5V = Forward). |
+| `0x24` | `three_gears_switch` | **Three Gears Switch** | `Bool` | `0 or 1` | - | ✏️ Read/Write | Three-Gear Operating Switch. Enabled: FWD / Neutral / REV 3-position gear selection; Disabled: Forward only. |
+| `0x27` | `boost` | **Boost** | `Bool` | `0 or 1` | - | ✏️ Read/Write | Boost Switch Mode. Enabled: Connecting Pin 2 (Brake_AN) to 12V triggers full boost power regardless of throttle position; Disabled: Pin 2 operates variable regen. |
+| `0x28` | `foot_switch` | **Foot Switch** | `Bool` | `0 or 1` | - | ✏️ Read/Write | Throttle Enable Microswitch (Foot_SW). Enabled: Pin 15 must be connected to 12V for throttle output to be active. |
+| `0x29` | `sw_level` | **SW Level** | `Bool` | `0 or 1` | - | ✏️ Read/Write | Digital Switch Input Voltage Level Logic. Enabled (Checked): High active (12V = ON); Disabled (Unchecked): Low active (0V / GND = ON). |
+| `0x2A` | `controller_type_kim` | **0,KIM;1,KIM** | `Bool` | `0 or 1` | - | ✏️ Read/Write | Controller internal variant selection bit. Checked: KIM model family logic; Unchecked: HIM model family logic. |
+| `0x2B` | `cruise` | **Cruise** | `Bool` | `0 or 1` | - | ✏️ Read/Write | Cruise Control Function. Enabled: Holding steady throttle for >3s enters cruise mode. Automatically disengages if eRPM drops below 4000 or brake is hit. |
+| `0x2C` | `anti_theft_en` | **Anti-theft** | `Bool` | `0 or 1` | - | ✏️ Read/Write | Anti-Theft Alarm Lock Function. Enabled: Controller resists motor rotation and applies counter-torque when external anti-theft alarm is triggered. |
+| `0x2D` | `anti_slip` | **Anti-Slip** | `Bool` | `0 or 1` | - | ✏️ Read/Write | Bidirectional Anti-Slip Hill Hold. Enabled: Controller detects backward rollback from standstill and applies braking/hold torque to prevent vehicle from slipping. |
+| `0x2E` | `change_direction` | **Change Direction** | `Bool` | `0 or 1` | - | ✏️ Read/Write | Motor Rotation Direction Swap. Enabled: Reverses motor direction after auto-identification without swapping physical motor phase wires. |
 
 ---
 
-## 4. Usage Example (Rust)
+## 4. GUI Companion Application & Interactive Visualizers
+
+The `kls-companion` desktop application provides a graphical interface built with `eframe`/`egui` for real-time telemetry monitoring and complete OEM controller configuration.
+
+### Key Features
+- **Real-Time Telemetry Dashboard & Live Charts**: High-frequency polling of battery voltage, phase current, motor RPM, controller temperature, motor temperature, direction, and switch states using `egui_plot`.
+- **Full OEM Parameter Catalog (98 Parameters)**: Complete implementation of all 98 items from the official Kelly KLS User Manual & Motor ETS software across four sub-tabs:
+  - **🚗 Vehicle**: Voltage cut-offs (`Low Volt`, `Over Volt`), current limits (`Motor_Current%`, `Battery_Current%`), throttle & brake deadzones/MAP curves, speed limits, speed mode switches.
+  - **⚡ Motor**: Pole pairs, speed sensor types (Hall vs Encoder/Resolver), temperature foldback thresholds (`High Temp Cut`, `Resume ℃`, `High Temp Str`), Line Hall calibration, and auto-ID Hall angle sequences.
+  - **🎛 Control**: FOC current loop gains (`IQ Kp/Ki`, `ID Kp/Ki`), high-speed gains (`MS_ACQR_Kp/Ki`, `MS_ACDR_Kp/Ki`), acceleration/braking ramp times, regen strength percentages, and torque-mode speed loop limits.
+  - **☑ Features**: Boolean toggle switches for all 13 feature checkboxes (`Startup H-Pedal`, `Brake H-Pedal`, `NTL H-Pedal`, `Joystick`, `Three Gears Switch`, `Boost`, `Foot Switch`, `SW Level`, `0,KIM;1,KIM`, `Cruise`, `Anti-theft`, `Anti-Slip`, `Change Direction`).
+- **Rich Hover Tooltips**: Hovering over any parameter label, address, value slider, checkbox, or write button displays a detailed explanation of its function, formulas, and tuning behavior synthesized from official manuals and firmware definitions.
+- **Interactive Dual-Pane Visualizer Panel**: Live graphical curve rendering embedded directly beside parameter controls:
+  - **Throttle & Brake MAP Curves**: Visualizes non-linear response curves (0-100%) based on deadzones and midpoint MAP curvature.
+  - **PI Step Response Simulation**: Interactive step response plot showing proportional and integral loop gains (`Kp`/`Ki`).
+  - **RPM Mode Transition Plot**: Visualizes square-wave to sine-wave mode switching thresholds.
+  - **Ramp Dynamics Graph**: Renders drive and braking torque acceleration/release time profiles.
+  - **Thermal Foldback Curve**: Graphs motor temperature derating thresholds (`Str ℃` to `Cut ℃`).
+  - **3-Phase Hall Electrical Angle Diagram**: Circular electrical degree diagram displaying Hall sensor sequence values (0°, 60°, 120°, 180°, 240°, 300°).
+- **Safety Write Protection & Confirmation Modals**: Automatic write protection when motor is active (`RPM > 0`) and warning confirmation popups for critical parameters (voltage thresholds, identification angle, pole count, current limits).
+- **JSON Profile Export & Import**: Save and restore full controller configuration profiles to JSON files.
+
+---
+
+## 5. Usage Example (Rust)
 
 ```rust
 use kls_companion::protocol::kls::{KlsCommand, parse_packet_a, parse_packet_b};
