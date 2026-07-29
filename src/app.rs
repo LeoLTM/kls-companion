@@ -302,76 +302,118 @@ impl KlsApp {
             ui.add_space(5.0);
         }
 
-        egui::ScrollArea::vertical().show(ui, |ui| {
-            egui::Grid::new("param_grid")
-                .striped(true)
-                .num_columns(5)
-                .spacing([15.0, 8.0])
-                .show(ui, |ui| {
-                    ui.label(egui::RichText::new("Address").strong());
-                    ui.label(egui::RichText::new("Parameter Name").strong());
-                    ui.label(egui::RichText::new("Value").strong());
-                    ui.label(egui::RichText::new("Unit").strong());
-                    ui.label(egui::RichText::new("Action").strong());
+        ui.horizontal_top(|ui| {
+            // Left Column: OEM Parameter Table
+            let left_width = (ui.available_width() * 0.50).max(420.0);
+            ui.allocate_ui_with_layout(
+                egui::vec2(left_width, ui.available_height()),
+                egui::Layout::top_down(egui::Align::LEFT),
+                |ui| {
+                    egui::ScrollArea::vertical().id_salt("param_table_scroll").show(ui, |ui| {
+                        egui::Grid::new("param_grid")
+                            .striped(true)
+                            .num_columns(5)
+                            .spacing([12.0, 8.0])
+                            .show(ui, |ui| {
+                                ui.label(egui::RichText::new("Address").strong());
+                                ui.label(egui::RichText::new("Parameter Name").strong());
+                                ui.label(egui::RichText::new("Value").strong());
+                                ui.label(egui::RichText::new("Unit").strong());
+                                ui.label(egui::RichText::new("Action").strong());
 
-                    ui.end_row();
+                                ui.end_row();
 
-                    for def in get_all_param_defs().iter().filter(|d| d.category == self.oem_subtab) {
-                        ui.label(format!("0x{:02X}", def.addr));
-                        ui.label(def.label);
+                                for def in get_all_param_defs().iter().filter(|d| d.category == self.oem_subtab) {
+                                    ui.label(format!("0x{:02X}", def.addr)).on_hover_text(def.description);
+                                    ui.label(def.label).on_hover_text(def.description);
 
-                        let current_val = *self.param_values.get(&def.addr).unwrap_or(&def.default_val);
+                                    let current_val = *self.param_values.get(&def.addr).unwrap_or(&def.default_val);
 
-                        if def.is_read_only {
-                            ui.add_enabled_ui(false, |ui| {
-                                if def.val_type == ValueType::Bool {
-                                    let mut chk = current_val != 0;
-                                    ui.checkbox(&mut chk, "");
-                                } else {
-                                    ui.label(format!("{}", current_val));
-                                }
-                            });
-                            ui.label(def.unit);
-                            ui.label("🔒 Read-Only");
-                        } else {
-                            let mut val = current_val;
-
-                            if def.val_type == ValueType::Bool {
-                                let mut chk = val != 0;
-                                let label = if chk { "Enabled" } else { "Disabled" };
-                                if ui.checkbox(&mut chk, label).changed() {
-                                    val = if chk { 1 } else { 0 };
-                                    self.param_values.insert(def.addr, val);
-                                }
-                            } else {
-                                let drag = egui::DragValue::new(&mut val)
-                                    .range(def.min_val..=def.max_val);
-
-                                if ui.add(drag).changed() {
-                                    self.param_values.insert(def.addr, val);
-                                }
-                            }
-
-                            ui.label(def.unit);
-
-                            let can_write = self.is_connected && !motor_spinning;
-                            ui.add_enabled_ui(can_write, |ui| {
-                                if ui.button("📤 Write").clicked() {
-                                    if def.is_critical {
-                                        self.pending_write = Some((def.addr, val, def.label));
-                                        self.show_confirm_modal = true;
+                                    if def.is_read_only {
+                                        ui.add_enabled_ui(false, |ui| {
+                                            if def.val_type == ValueType::Bool {
+                                                let mut chk = current_val != 0;
+                                                ui.checkbox(&mut chk, "").on_hover_text(def.description);
+                                            } else {
+                                                ui.label(format!("{}", current_val)).on_hover_text(def.description);
+                                            }
+                                        });
+                                        ui.label(def.unit);
+                                        ui.label("🔒 Read-Only").on_hover_text(def.description);
                                     } else {
-                                        let _ = self.tx_cmd.send(WorkerCommand::WriteParam {
-                                            addr: def.addr,
-                                            value: val as u8,
+                                        let mut val = current_val;
+
+                                        if def.val_type == ValueType::Bool {
+                                            let mut chk = val != 0;
+                                            let label = if chk { "Enabled" } else { "Disabled" };
+                                            if ui.checkbox(&mut chk, label).on_hover_text(def.description).changed() {
+                                                val = if chk { 1 } else { 0 };
+                                                self.param_values.insert(def.addr, val);
+                                            }
+                                        } else {
+                                            let drag = egui::DragValue::new(&mut val)
+                                                .range(def.min_val..=def.max_val);
+
+                                            if ui.add(drag).on_hover_text(def.description).changed() {
+                                                self.param_values.insert(def.addr, val);
+                                            }
+                                        }
+
+                                        ui.label(def.unit);
+
+                                        let can_write = self.is_connected && !motor_spinning;
+                                        ui.add_enabled_ui(can_write, |ui| {
+                                            if ui.button("📤 Write").on_hover_text(def.description).clicked() {
+                                                if def.is_critical {
+                                                    self.pending_write = Some((def.addr, val, def.label));
+                                                    self.show_confirm_modal = true;
+                                                } else {
+                                                    let _ = self.tx_cmd.send(WorkerCommand::WriteParam {
+                                                        addr: def.addr,
+                                                        value: val as u8,
+                                                    });
+                                                }
+                                            }
                                         });
                                     }
+                                    ui.end_row();
                                 }
                             });
+                    });
+                },
+            );
+
+            ui.separator();
+
+            // Right Column: Interactive Diagram Visualizer Panel
+            ui.allocate_ui_with_layout(
+                egui::vec2(ui.available_width(), ui.available_height()),
+                egui::Layout::top_down(egui::Align::LEFT),
+                |ui| {
+                    egui::ScrollArea::vertical().id_salt("visualizer_scroll").show(ui, |ui| {
+                        match self.oem_subtab {
+                            OemCategory::Vehicle => {
+                                crate::visualizer::draw_map_curves(ui, &self.param_values);
+                            }
+                            OemCategory::Control => {
+                                crate::visualizer::draw_pi_step_response(ui, &self.param_values);
+                                ui.add_space(8.0);
+                                crate::visualizer::draw_rpm_transition(ui, &self.param_values);
+                                ui.add_space(8.0);
+                                crate::visualizer::draw_ramp_dynamics(ui, &self.param_values);
+                            }
+                            OemCategory::Motor => {
+                                crate::visualizer::draw_thermal_foldback(ui, &self.param_values);
+                                ui.add_space(8.0);
+                                crate::visualizer::draw_hall_diagram(ui, &self.param_values);
+                            }
+                            OemCategory::Features => {
+                                crate::visualizer::draw_map_curves(ui, &self.param_values);
+                            }
                         }
-                        ui.end_row();
-                    }
-                });
+                    });
+                },
+            );
         });
 
         // Safety Modal Dialog

@@ -1,5 +1,6 @@
 mod app;
 mod protocol;
+mod visualizer;
 mod worker;
 
 use app::KlsApp;
