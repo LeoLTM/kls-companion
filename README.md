@@ -2,6 +2,8 @@
 
 Rust library and companion application for interfacing with Kelly Controls KLS / KMC series motor controllers via serial / UART.
 
+Built with Rust, egui, serialport and serde.
+
 ---
 
 ## 1. Serial Protocol Overview
