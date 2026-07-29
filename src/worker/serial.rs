@@ -5,7 +5,7 @@ use std::thread;
 use std::time::{Duration, Instant};
 
 use crate::protocol::kls::{
-    parse_packet_a, parse_packet_b, KlsCommand, KlsTelemetry, PACKET_LENGTH,
+    KlsCommand, KlsTelemetry, PACKET_LENGTH, parse_packet_a, parse_packet_b,
 };
 
 #[allow(dead_code)]
@@ -32,10 +32,7 @@ pub enum WorkerEvent {
     Error(String),
 }
 
-fn exchange_packet(
-    port: &mut Box<dyn serialport::SerialPort>,
-    cmd: u8,
-) -> Result<Vec<u8>, String> {
+fn exchange_packet(port: &mut Box<dyn serialport::SerialPort>, cmd: u8) -> Result<Vec<u8>, String> {
     // Flush input buffer
     let mut flush_buf = [0u8; 1];
     let mut discarded = 0;
@@ -87,10 +84,7 @@ fn exchange_packet(
     ))
 }
 
-fn execute_read_param(
-    port: &mut Box<dyn serialport::SerialPort>,
-    addr: u8,
-) -> Result<u8, String> {
+fn execute_read_param(port: &mut Box<dyn serialport::SerialPort>, addr: u8) -> Result<u8, String> {
     let frame = KlsCommand::ReadParam { addr }.build_frame();
     port.write_all(&frame).map_err(|e| e.to_string())?;
     port.flush().map_err(|e| e.to_string())?;
@@ -146,7 +140,10 @@ pub fn spawn_serial_worker(
                         };
                         let _ = tx_evt.send(WorkerEvent::PortsDiscovered(ports));
                     }
-                    WorkerCommand::Connect { port_name, baud_rate } => {
+                    WorkerCommand::Connect {
+                        port_name,
+                        baud_rate,
+                    } => {
                         port = None;
                         match serialport::new(&port_name, baud_rate)
                             .timeout(Duration::from_millis(15))
@@ -182,7 +179,8 @@ pub fn spawn_serial_worker(
                                 Ok(_) => {
                                     // Read-back verification
                                     if let Ok(val) = execute_read_param(p, addr) {
-                                        let _ = tx_evt.send(WorkerEvent::ParamValue { addr, value: val });
+                                        let _ = tx_evt
+                                            .send(WorkerEvent::ParamValue { addr, value: val });
                                     }
                                 }
                                 Err(e) => {
@@ -200,7 +198,8 @@ pub fn spawn_serial_worker(
                             });
                             match execute_read_param(p, addr) {
                                 Ok(val) => {
-                                    let _ = tx_evt.send(WorkerEvent::ParamValue { addr, value: val });
+                                    let _ =
+                                        tx_evt.send(WorkerEvent::ParamValue { addr, value: val });
                                 }
                                 Err(e) => {
                                     let _ = tx_evt.send(WorkerEvent::Error(e));
@@ -212,7 +211,8 @@ pub fn spawn_serial_worker(
                         if let Some(ref mut p) = port {
                             for addr in addrs {
                                 if let Ok(val) = execute_read_param(p, addr) {
-                                    let _ = tx_evt.send(WorkerEvent::ParamValue { addr, value: val });
+                                    let _ =
+                                        tx_evt.send(WorkerEvent::ParamValue { addr, value: val });
                                 }
                                 thread::sleep(Duration::from_millis(10));
                             }

@@ -24,7 +24,10 @@ pub fn calc_map_curve_point(x: f64, dead_low: u16, dead_high: u16, map_pct: u16)
 }
 
 /// Simulate 2nd order PI current control loop step response over 20 ms
-pub fn simulate_pi_step_response(kp_val: u16, ki_val: u16) -> (Vec<[f64; 2]>, f64, f64, f64, &'static str) {
+pub fn simulate_pi_step_response(
+    kp_val: u16,
+    ki_val: u16,
+) -> (Vec<[f64; 2]>, f64, f64, f64, &'static str) {
     let kp = (kp_val as f64 / 1500.0).clamp(0.1, 20.0);
     let ki = (ki_val as f64 / 30.0).clamp(0.01, 50.0);
 
@@ -174,7 +177,13 @@ pub fn draw_map_curves(ui: &mut egui::Ui, param_values: &BTreeMap<u8, u16>) {
 pub fn draw_pi_step_response(ui: &mut egui::Ui, param_values: &BTreeMap<u8, u16>) {
     ui.group(|ui| {
         ui.heading("🎛 Current Loop PI Step Response Simulation");
-        ui.label(egui::RichText::new("Simulated phase current step response (I_q / I_d loop) to evaluate Kp/Ki tuning.").small().weak());
+        ui.label(
+            egui::RichText::new(
+                "Simulated phase current step response (I_q / I_d loop) to evaluate Kp/Ki tuning.",
+            )
+            .small()
+            .weak(),
+        );
         ui.add_space(4.0);
 
         let iq_kp = *param_values.get(&0x80).unwrap_or(&1500);
@@ -182,8 +191,10 @@ pub fn draw_pi_step_response(ui: &mut egui::Ui, param_values: &BTreeMap<u8, u16>
         let id_kp = *param_values.get(&0x86).unwrap_or(&1500);
         let id_ki = *param_values.get(&0x88).unwrap_or(&30);
 
-        let (iq_points, iq_over, iq_tr, _iq_ts, iq_status) = simulate_pi_step_response(iq_kp, iq_ki);
-        let (id_points, _id_over, _id_tr, _id_ts, _id_status) = simulate_pi_step_response(id_kp, id_ki);
+        let (iq_points, iq_over, iq_tr, _iq_ts, iq_status) =
+            simulate_pi_step_response(iq_kp, iq_ki);
+        let (id_points, _id_over, _id_tr, _id_ts, _id_status) =
+            simulate_pi_step_response(id_kp, id_ki);
 
         let target_line: PlotPoints = vec![[0.0, 1.0], [20.0, 1.0]].into();
 
@@ -214,9 +225,19 @@ pub fn draw_pi_step_response(ui: &mut egui::Ui, param_values: &BTreeMap<u8, u16>
         ui.horizontal(|ui| {
             ui.label(egui::RichText::new(iq_status).strong());
             ui.separator();
-            ui.label(format!("Overshoot: {:.1}% | Rise Time: {:.1} ms", iq_over, iq_tr));
+            ui.label(format!(
+                "Overshoot: {:.1}% | Rise Time: {:.1} ms",
+                iq_over, iq_tr
+            ));
         });
-        ui.label(egui::RichText::new(format!("IQ Kp: {}, Ki: {} | ID Kp: {}, Ki: {}", iq_kp, iq_ki, id_kp, id_ki)).small().weak());
+        ui.label(
+            egui::RichText::new(format!(
+                "IQ Kp: {}, Ki: {} | ID Kp: {}, Ki: {}",
+                iq_kp, iq_ki, id_kp, id_ki
+            ))
+            .small()
+            .weak(),
+        );
     });
 }
 
@@ -224,7 +245,11 @@ pub fn draw_pi_step_response(ui: &mut egui::Ui, param_values: &BTreeMap<u8, u16>
 pub fn draw_rpm_transition(ui: &mut egui::Ui, param_values: &BTreeMap<u8, u16>) {
     ui.group(|ui| {
         ui.heading("🔄 Low vs High Speed Gain Transition (<400 RPM vs >400 RPM)");
-        ui.label(egui::RichText::new("Kelly controllers switch PI gain sets at 400 RPM threshold.").small().weak());
+        ui.label(
+            egui::RichText::new("Kelly controllers switch PI gain sets at 400 RPM threshold.")
+                .small()
+                .weak(),
+        );
         ui.add_space(4.0);
 
         let iq_kp_low = *param_values.get(&0x80).unwrap_or(&1500) as f64;
@@ -245,7 +270,11 @@ pub fn draw_rpm_transition(ui: &mut egui::Ui, param_values: &BTreeMap<u8, u16>) 
             kp_d_pts.push([r, d_val]);
         }
 
-        let max_gain = iq_kp_low.max(iq_kp_high).max(id_kp_low).max(id_kp_high).max(100.0);
+        let max_gain = iq_kp_low
+            .max(iq_kp_high)
+            .max(id_kp_low)
+            .max(id_kp_high)
+            .max(100.0);
         let line_400: PlotPoints = vec![[400.0, 0.0], [400.0, max_gain * 1.1]].into();
 
         Plot::new("rpm_gain_plot")
@@ -278,7 +307,11 @@ pub fn draw_rpm_transition(ui: &mut egui::Ui, param_values: &BTreeMap<u8, u16>) 
 pub fn draw_ramp_dynamics(ui: &mut egui::Ui, param_values: &BTreeMap<u8, u16>) {
     ui.group(|ui| {
         ui.heading("⏱ Acceleration & Braking Torque Ramp Dynamics");
-        ui.label(egui::RichText::new("Torque ramp-up and release decay times over time (seconds).").small().weak());
+        ui.label(
+            egui::RichText::new("Torque ramp-up and release decay times over time (seconds).")
+                .small()
+                .weak(),
+        );
         ui.add_space(4.0);
 
         let t_acc = (*param_values.get(&0xA2).unwrap_or(&5) as f64) * 0.1;
@@ -352,7 +385,11 @@ pub fn draw_ramp_dynamics(ui: &mut egui::Ui, param_values: &BTreeMap<u8, u16>) {
 pub fn draw_thermal_foldback(ui: &mut egui::Ui, param_values: &BTreeMap<u8, u16>) {
     ui.group(|ui| {
         ui.heading("🌡 Motor Thermal Current Foldback Curve");
-        ui.label(egui::RichText::new("Current limiting profile based on motor temperature thresholds.").small().weak());
+        ui.label(
+            egui::RichText::new("Current limiting profile based on motor temperature thresholds.")
+                .small()
+                .weak(),
+        );
         ui.add_space(4.0);
 
         let t_striae = *param_values.get(&0x47).unwrap_or(&100) as f64;
@@ -371,7 +408,11 @@ pub fn draw_thermal_foldback(ui: &mut egui::Ui, param_values: &BTreeMap<u8, u16>
                 0.0
             } else {
                 let ratio = (t - t_striae) / (t_cutoff_effective - t_striae);
-                let target_min = if foldback_pct > 0.0 { 100.0 - foldback_pct } else { 0.0 };
+                let target_min = if foldback_pct > 0.0 {
+                    100.0 - foldback_pct
+                } else {
+                    0.0
+                };
                 100.0 - ratio * (100.0 - target_min)
             };
             foldback_pts.push([t, current_limit.max(0.0)]);
@@ -491,7 +532,8 @@ mod tests {
 
     #[test]
     fn test_simulate_pi_step_response() {
-        let (points, overshoot, rise_time, _settling, _status) = simulate_pi_step_response(1500, 30);
+        let (points, overshoot, rise_time, _settling, _status) =
+            simulate_pi_step_response(1500, 30);
         assert_eq!(points.len(), 400);
         assert!(rise_time > 0.0);
         assert!(overshoot >= 0.0);

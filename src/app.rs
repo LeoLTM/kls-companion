@@ -3,15 +3,15 @@
 use eframe::egui;
 use egui_plot::{Line, Plot, PlotPoints};
 use std::collections::{BTreeMap, VecDeque};
-use std::sync::mpsc::{channel, Receiver, Sender};
+use std::sync::mpsc::{Receiver, Sender, channel};
 use std::time::Instant;
 
 use crate::protocol::kls::KlsTelemetry;
 use crate::protocol::oem_params::{
-    export_profile_to_json, get_all_param_defs, import_profile_from_json, OemCategory,
-    ParamProfile, ValueType,
+    OemCategory, ParamProfile, ValueType, export_profile_to_json, get_all_param_defs,
+    import_profile_from_json,
 };
-use crate::worker::serial::{spawn_serial_worker, WorkerCommand, WorkerEvent};
+use crate::worker::serial::{WorkerCommand, WorkerEvent, spawn_serial_worker};
 
 #[derive(Debug, PartialEq)]
 enum AppTab {
@@ -109,11 +109,17 @@ impl KlsApp {
                 }
                 WorkerEvent::Telemetry(t) => {
                     let elapsed = self.start_time.elapsed().as_secs_f64();
-                    self.voltage_history.push_back([elapsed, t.battery_voltage_v as f64]);
-                    self.current_history.push_back([elapsed, t.phase_current_a as f64]);
+                    self.voltage_history
+                        .push_back([elapsed, t.battery_voltage_v as f64]);
+                    self.current_history
+                        .push_back([elapsed, t.phase_current_a as f64]);
                     self.rpm_history.push_back([elapsed, t.rpm as f64]);
 
-                    while self.voltage_history.front().map_or(false, |p| elapsed - p[0] > self.max_history_sec) {
+                    while self
+                        .voltage_history
+                        .front()
+                        .map_or(false, |p| elapsed - p[0] > self.max_history_sec)
+                    {
                         self.voltage_history.pop_front();
                         self.current_history.pop_front();
                         self.rpm_history.pop_front();
@@ -130,7 +136,11 @@ impl KlsApp {
                 }
                 WorkerEvent::RawFrame { is_tx, data } => {
                     let prefix = if is_tx { "TX ->" } else { "RX <-" };
-                    let hex_str = data.iter().map(|b| format!("{:02X}", b)).collect::<Vec<_>>().join(" ");
+                    let hex_str = data
+                        .iter()
+                        .map(|b| format!("{:02X}", b))
+                        .collect::<Vec<_>>()
+                        .join(" ");
                     self.raw_logs.push_back(format!("{} {}", prefix, hex_str));
                     while self.raw_logs.len() > 500 {
                         self.raw_logs.pop_front();
@@ -156,7 +166,11 @@ impl eframe::App for KlsApp {
 
                 ui.label("Port:");
                 egui::ComboBox::from_id_salt("port_select")
-                    .selected_text(if self.selected_port.is_empty() { "Select Port" } else { &self.selected_port })
+                    .selected_text(if self.selected_port.is_empty() {
+                        "Select Port"
+                    } else {
+                        &self.selected_port
+                    })
                     .show_ui(ui, |ui| {
                         for p in &self.available_ports {
                             ui.selectable_value(&mut self.selected_port, p.clone(), p);
@@ -187,18 +201,20 @@ impl eframe::App for KlsApp {
             ui.horizontal(|ui| {
                 ui.selectable_value(&mut self.current_tab, AppTab::Dashboard, "📊 Dashboard");
                 ui.selectable_value(&mut self.current_tab, AppTab::LiveChart, "📈 Live Chart");
-                ui.selectable_value(&mut self.current_tab, AppTab::Parameters, "⚙ Parameters (OEM)");
+                ui.selectable_value(
+                    &mut self.current_tab,
+                    AppTab::Parameters,
+                    "⚙ Parameters (OEM)",
+                );
                 ui.selectable_value(&mut self.current_tab, AppTab::RawLogs, "📜 Serial Logs");
             });
         });
 
-        egui::CentralPanel::default().show(ctx, |ui| {
-            match self.current_tab {
-                AppTab::Dashboard => self.show_dashboard(ui),
-                AppTab::LiveChart => self.show_live_chart(ui),
-                AppTab::Parameters => self.show_parameters(ui, ctx),
-                AppTab::RawLogs => self.show_raw_logs(ui),
-            }
+        egui::CentralPanel::default().show(ctx, |ui| match self.current_tab {
+            AppTab::Dashboard => self.show_dashboard(ui),
+            AppTab::LiveChart => self.show_live_chart(ui),
+            AppTab::Parameters => self.show_parameters(ui, ctx),
+            AppTab::RawLogs => self.show_raw_logs(ui),
         });
     }
 }
@@ -241,9 +257,21 @@ impl KlsApp {
         Plot::new("telemetry_plot")
             .legend(egui_plot::Legend::default())
             .show(ui, |plot_ui| {
-                plot_ui.line(Line::new(v_points).name("Voltage (V)").color(egui::Color32::LIGHT_BLUE));
-                plot_ui.line(Line::new(i_points).name("Current (A)").color(egui::Color32::GOLD));
-                plot_ui.line(Line::new(rpm_points).name("RPM").color(egui::Color32::GREEN));
+                plot_ui.line(
+                    Line::new(v_points)
+                        .name("Voltage (V)")
+                        .color(egui::Color32::LIGHT_BLUE),
+                );
+                plot_ui.line(
+                    Line::new(i_points)
+                        .name("Current (A)")
+                        .color(egui::Color32::GOLD),
+                );
+                plot_ui.line(
+                    Line::new(rpm_points)
+                        .name("RPM")
+                        .color(egui::Color32::GREEN),
+                );
             });
     }
 
@@ -264,7 +292,10 @@ impl KlsApp {
                     text_values: self.text_values.clone(),
                 };
                 if let Ok(json) = export_profile_to_json(&profile) {
-                    if let Some(path) = rfd::FileDialog::new().set_file_name("kls_params.json").save_file() {
+                    if let Some(path) = rfd::FileDialog::new()
+                        .set_file_name("kls_params.json")
+                        .save_file()
+                    {
                         let _ = std::fs::write(path, json);
                     }
                 }
@@ -298,7 +329,10 @@ impl KlsApp {
         // Disallow write when motor is spinning
         let motor_spinning = self.telemetry.rpm > 0;
         if motor_spinning {
-            ui.colored_label(egui::Color32::RED, "⚠ Motor active (RPM > 0). Parameter writes locked for safety.");
+            ui.colored_label(
+                egui::Color32::RED,
+                "⚠ Motor active (RPM > 0). Parameter writes locked for safety.",
+            );
             ui.add_space(5.0);
         }
 
@@ -309,77 +343,104 @@ impl KlsApp {
                 egui::vec2(left_width, ui.available_height()),
                 egui::Layout::top_down(egui::Align::LEFT),
                 |ui| {
-                    egui::ScrollArea::vertical().id_salt("param_table_scroll").show(ui, |ui| {
-                        egui::Grid::new("param_grid")
-                            .striped(true)
-                            .num_columns(5)
-                            .spacing([12.0, 8.0])
-                            .show(ui, |ui| {
-                                ui.label(egui::RichText::new("Address").strong());
-                                ui.label(egui::RichText::new("Parameter Name").strong());
-                                ui.label(egui::RichText::new("Value").strong());
-                                ui.label(egui::RichText::new("Unit").strong());
-                                ui.label(egui::RichText::new("Action").strong());
+                    egui::ScrollArea::vertical()
+                        .id_salt("param_table_scroll")
+                        .show(ui, |ui| {
+                            egui::Grid::new("param_grid")
+                                .striped(true)
+                                .num_columns(5)
+                                .spacing([12.0, 8.0])
+                                .show(ui, |ui| {
+                                    ui.label(egui::RichText::new("Address").strong());
+                                    ui.label(egui::RichText::new("Parameter Name").strong());
+                                    ui.label(egui::RichText::new("Value").strong());
+                                    ui.label(egui::RichText::new("Unit").strong());
+                                    ui.label(egui::RichText::new("Action").strong());
 
-                                ui.end_row();
+                                    ui.end_row();
 
-                                for def in get_all_param_defs().iter().filter(|d| d.category == self.oem_subtab) {
-                                    ui.label(format!("0x{:02X}", def.addr)).on_hover_text(def.description);
-                                    ui.label(def.label).on_hover_text(def.description);
+                                    for def in get_all_param_defs()
+                                        .iter()
+                                        .filter(|d| d.category == self.oem_subtab)
+                                    {
+                                        ui.label(format!("0x{:02X}", def.addr))
+                                            .on_hover_text(def.description);
+                                        ui.label(def.label).on_hover_text(def.description);
 
-                                    let current_val = *self.param_values.get(&def.addr).unwrap_or(&def.default_val);
+                                        let current_val = *self
+                                            .param_values
+                                            .get(&def.addr)
+                                            .unwrap_or(&def.default_val);
 
-                                    if def.is_read_only {
-                                        ui.add_enabled_ui(false, |ui| {
-                                            if def.val_type == ValueType::Bool {
-                                                let mut chk = current_val != 0;
-                                                ui.checkbox(&mut chk, "").on_hover_text(def.description);
-                                            } else {
-                                                ui.label(format!("{}", current_val)).on_hover_text(def.description);
-                                            }
-                                        });
-                                        ui.label(def.unit);
-                                        ui.label("🔒 Read-Only").on_hover_text(def.description);
-                                    } else {
-                                        let mut val = current_val;
-
-                                        if def.val_type == ValueType::Bool {
-                                            let mut chk = val != 0;
-                                            let label = if chk { "Enabled" } else { "Disabled" };
-                                            if ui.checkbox(&mut chk, label).on_hover_text(def.description).changed() {
-                                                val = if chk { 1 } else { 0 };
-                                                self.param_values.insert(def.addr, val);
-                                            }
-                                        } else {
-                                            let drag = egui::DragValue::new(&mut val)
-                                                .range(def.min_val..=def.max_val);
-
-                                            if ui.add(drag).on_hover_text(def.description).changed() {
-                                                self.param_values.insert(def.addr, val);
-                                            }
-                                        }
-
-                                        ui.label(def.unit);
-
-                                        let can_write = self.is_connected && !motor_spinning;
-                                        ui.add_enabled_ui(can_write, |ui| {
-                                            if ui.button("📤 Write").on_hover_text(def.description).clicked() {
-                                                if def.is_critical {
-                                                    self.pending_write = Some((def.addr, val, def.label));
-                                                    self.show_confirm_modal = true;
+                                        if def.is_read_only {
+                                            ui.add_enabled_ui(false, |ui| {
+                                                if def.val_type == ValueType::Bool {
+                                                    let mut chk = current_val != 0;
+                                                    ui.checkbox(&mut chk, "")
+                                                        .on_hover_text(def.description);
                                                 } else {
-                                                    let _ = self.tx_cmd.send(WorkerCommand::WriteParam {
-                                                        addr: def.addr,
-                                                        value: val as u8,
-                                                    });
+                                                    ui.label(format!("{}", current_val))
+                                                        .on_hover_text(def.description);
+                                                }
+                                            });
+                                            ui.label(def.unit);
+                                            ui.label("🔒 Read-Only").on_hover_text(def.description);
+                                        } else {
+                                            let mut val = current_val;
+
+                                            if def.val_type == ValueType::Bool {
+                                                let mut chk = val != 0;
+                                                let label =
+                                                    if chk { "Enabled" } else { "Disabled" };
+                                                if ui
+                                                    .checkbox(&mut chk, label)
+                                                    .on_hover_text(def.description)
+                                                    .changed()
+                                                {
+                                                    val = if chk { 1 } else { 0 };
+                                                    self.param_values.insert(def.addr, val);
+                                                }
+                                            } else {
+                                                let drag = egui::DragValue::new(&mut val)
+                                                    .range(def.min_val..=def.max_val);
+
+                                                if ui
+                                                    .add(drag)
+                                                    .on_hover_text(def.description)
+                                                    .changed()
+                                                {
+                                                    self.param_values.insert(def.addr, val);
                                                 }
                                             }
-                                        });
+
+                                            ui.label(def.unit);
+
+                                            let can_write = self.is_connected && !motor_spinning;
+                                            ui.add_enabled_ui(can_write, |ui| {
+                                                if ui
+                                                    .button("📤 Write")
+                                                    .on_hover_text(def.description)
+                                                    .clicked()
+                                                {
+                                                    if def.is_critical {
+                                                        self.pending_write =
+                                                            Some((def.addr, val, def.label));
+                                                        self.show_confirm_modal = true;
+                                                    } else {
+                                                        let _ = self.tx_cmd.send(
+                                                            WorkerCommand::WriteParam {
+                                                                addr: def.addr,
+                                                                value: val as u8,
+                                                            },
+                                                        );
+                                                    }
+                                                }
+                                            });
+                                        }
+                                        ui.end_row();
                                     }
-                                    ui.end_row();
-                                }
-                            });
-                    });
+                                });
+                        });
                 },
             );
 
@@ -390,8 +451,9 @@ impl KlsApp {
                 egui::vec2(ui.available_width(), ui.available_height()),
                 egui::Layout::top_down(egui::Align::LEFT),
                 |ui| {
-                    egui::ScrollArea::vertical().id_salt("visualizer_scroll").show(ui, |ui| {
-                        match self.oem_subtab {
+                    egui::ScrollArea::vertical()
+                        .id_salt("visualizer_scroll")
+                        .show(ui, |ui| match self.oem_subtab {
                             OemCategory::Vehicle => {
                                 crate::visualizer::draw_map_curves(ui, &self.param_values);
                             }
@@ -410,8 +472,7 @@ impl KlsApp {
                             OemCategory::Features => {
                                 crate::visualizer::draw_map_curves(ui, &self.param_values);
                             }
-                        }
-                    });
+                        });
                 },
             );
         });
@@ -448,10 +509,12 @@ impl KlsApp {
 
     fn show_raw_logs(&mut self, ui: &mut egui::Ui) {
         ui.heading("Serial Communication Logs");
-        egui::ScrollArea::vertical().stick_to_bottom(true).show(ui, |ui| {
-            for log in &self.raw_logs {
-                ui.monospace(log);
-            }
-        });
+        egui::ScrollArea::vertical()
+            .stick_to_bottom(true)
+            .show(ui, |ui| {
+                for log in &self.raw_logs {
+                    ui.monospace(log);
+                }
+            });
     }
 }

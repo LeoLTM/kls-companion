@@ -153,7 +153,10 @@ pub fn parse_packet_a(bytes: &[u8]) -> Result<PacketA, String> {
         ));
     }
     if bytes[0] != 0x3A {
-        return Err(format!("Invalid Packet A header: 0x{:02X}, expected 0x3A", bytes[0]));
+        return Err(format!(
+            "Invalid Packet A header: 0x{:02X}, expected 0x3A",
+            bytes[0]
+        ));
     }
     if !validate_packet_checksum(bytes) {
         return Err(format!(
@@ -194,7 +197,10 @@ pub fn parse_packet_b(bytes: &[u8]) -> Result<PacketB, String> {
         ));
     }
     if bytes[0] != 0x3B {
-        return Err(format!("Invalid Packet B header: 0x{:02X}, expected 0x3B", bytes[0]));
+        return Err(format!(
+            "Invalid Packet B header: 0x{:02X}, expected 0x3B",
+            bytes[0]
+        ));
     }
     if !validate_packet_checksum(bytes) {
         return Err(format!(
@@ -230,19 +236,19 @@ mod tests {
         bytes[0] = 0x3A;
         bytes[1] = 0x00;
         bytes[2] = 128; // throttle
-        bytes[3] = 0;   // brake
-        bytes[4] = 0;   // brake sw
-        bytes[5] = 1;   // foot sw
-        bytes[6] = 1;   // fwd sw
-        bytes[7] = 0;   // rev
-        bytes[8] = 1;   // hall a
-        bytes[9] = 0;   // hall b
-        bytes[10] = 1;  // hall c
+        bytes[3] = 0; // brake
+        bytes[4] = 0; // brake sw
+        bytes[5] = 1; // foot sw
+        bytes[6] = 1; // fwd sw
+        bytes[7] = 0; // rev
+        bytes[8] = 1; // hall a
+        bytes[9] = 0; // hall b
+        bytes[10] = 1; // hall c
         bytes[11] = 72; // battery_voltage 72V
         bytes[12] = 35; // motor temp 35C
         bytes[13] = 42; // ctrl temp 42C
-        bytes[14] = 0;  // set dir
-        bytes[15] = 0;  // act dir
+        bytes[14] = 0; // set dir
+        bytes[15] = 0; // act dir
         bytes[16] = 0;
         bytes[17] = 0;
 
@@ -280,4 +286,3 @@ mod tests {
         assert_eq!(parsed.phase_current, 150);
     }
 }
-
