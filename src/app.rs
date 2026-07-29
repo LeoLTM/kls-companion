@@ -9,7 +9,7 @@ use std::time::Instant;
 use crate::protocol::kls::KlsTelemetry;
 use crate::protocol::oem_params::{
     export_profile_to_json, get_all_param_defs, import_profile_from_json, OemCategory,
-    ParamProfile,
+    ParamProfile, ValueType,
 };
 use crate::worker::serial::{spawn_serial_worker, WorkerCommand, WorkerEvent};
 
@@ -284,11 +284,12 @@ impl KlsApp {
 
         ui.add_space(8.0);
 
-        // Sub-tabs: Vehicle, Motor, Control
+        // Sub-tabs: Vehicle, Motor, Control, Features
         ui.horizontal(|ui| {
             ui.selectable_value(&mut self.oem_subtab, OemCategory::Vehicle, "🚗 Vehicle");
             ui.selectable_value(&mut self.oem_subtab, OemCategory::Motor, "⚡ Motor");
             ui.selectable_value(&mut self.oem_subtab, OemCategory::Control, "🎛 Control");
+            ui.selectable_value(&mut self.oem_subtab, OemCategory::Features, "☑ Features");
         });
 
         ui.separator();
@@ -323,18 +324,32 @@ impl KlsApp {
 
                         if def.is_read_only {
                             ui.add_enabled_ui(false, |ui| {
-                                ui.label(format!("{}", current_val));
+                                if def.val_type == ValueType::Bool {
+                                    let mut chk = current_val != 0;
+                                    ui.checkbox(&mut chk, "");
+                                } else {
+                                    ui.label(format!("{}", current_val));
+                                }
                             });
                             ui.label(def.unit);
                             ui.label("🔒 Read-Only");
                         } else {
                             let mut val = current_val;
-                            let drag = egui::DragValue::new(&mut val)
-                                .range(def.min_val..=def.max_val);
 
+                            if def.val_type == ValueType::Bool {
+                                let mut chk = val != 0;
+                                let label = if chk { "Enabled" } else { "Disabled" };
+                                if ui.checkbox(&mut chk, label).changed() {
+                                    val = if chk { 1 } else { 0 };
+                                    self.param_values.insert(def.addr, val);
+                                }
+                            } else {
+                                let drag = egui::DragValue::new(&mut val)
+                                    .range(def.min_val..=def.max_val);
 
-                            if ui.add(drag).changed() {
-                                self.param_values.insert(def.addr, val);
+                                if ui.add(drag).changed() {
+                                    self.param_values.insert(def.addr, val);
+                                }
                             }
 
                             ui.label(def.unit);
